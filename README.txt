@@ -1,3 +1,9 @@
+Nick last updated this in 2011.  datadesk added "a touch of Leaflet" shortly thereafter.
+
+Google retired v3 in 2021.  This is my attempt to get TimeMap to work with v4.
+
+------------------------------------------------
+
 /*! 
  * Timemap.js Copyright 2008 Nick Rabinowitz.
  * Licensed under the MIT License (see LICENSE.txt)
@@ -10,7 +16,7 @@ Timemap.js is intended to sync a SIMILE Timeline with a web-based map.
 Depends on: jQuery, Mapstraction 2.x, a map provider of your choice, SIMILE Timeline v1.2 - 2.3.1. 
 Tested browsers: Firefox 3.x, Google Chrome, IE7, IE8
 Tested map providers: Google v2, Google v3, OpenLayers, Bing Maps
-Thanks to Jörn Clausen (http://www.oe-files.de) for initial concept and code.
+Thanks to JÃ¶rn Clausen (http://www.oe-files.de) for initial concept and code.
 -------------------------------------------------------------------------------
 
 Getting Started
