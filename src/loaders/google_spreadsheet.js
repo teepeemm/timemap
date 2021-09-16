@@ -76,7 +76,7 @@ TimeMap.loaders.gss = function(options) {
     // build URL if not supplied
     if (!loader.opts.url && options.apikey && options.sheetsid && options.sheetname ) {
         loader.opts.url = "https://sheets.googleapis.com/v4/spreadsheets/"
-            + options.sheetsid + "/values/" + options.sheetname + "alt=json&key="
+            + options.sheetsid + "/values/" + options.sheetname + "?alt=json&key="
             + options.apikey +"&callback=?";
     }
     
@@ -150,8 +150,8 @@ TimeMap.loaders.gss.setParamField = function(param, fieldName) {
     // internal function: Get the value of a Google Spreadsheet field
     var getField = function(data, fieldName) {
         // get element, converting field name to GSS format
-        var el = data['gsx$' + fieldName.toLowerCase().replace(" ", "")];
-        return el ? el.$t : null;
+        var el = data[fieldName];
+        return el ? el : null;
     };
     // set the method on the parameter
     param.setConfigGSS = function(config, data) {
