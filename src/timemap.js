@@ -1228,29 +1228,20 @@ TimeMapFilterChain.prototype = {
      * Run filters on all items
      */
     run: function() {
-        var fc = this,
-            chain = fc.chain;
-        // early exit
+        var fc = this;
+        // pre-filter function
+        fc.pre();
+        var chain = fc.chain;
+        // early exit (but fc.pre can change the chain first)
         if (!chain.length) {
             return;
         }
-        // pre-filter function
-        fc.pre();
         // run items through filter
         fc.timemap.eachItem(function(item) {
-            var done, 
-                i = chain.length;
-            L: while (!done) { 
-                while (i--) {
-                    if (!chain[i](item)) {
-                        // false condition
-                        fc.off(item);
-                        break L;
-                    }
-                }
-                // true condition
+            if ( chain.every( chainLink => chainLink(item) ) ) {
                 fc.on(item);
-                done = true;
+            } else {
+                fc.off(item);
             }
         });
         // post-filter function

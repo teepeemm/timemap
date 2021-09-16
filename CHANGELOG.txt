@@ -6,6 +6,10 @@
 CHANGELOG (see the SVN commit log for more detail)
 -------------------------------------------------------------------------------
 
+Version 2.0.2
+-----------
+- Change Google to v4
+
 Version 2.0.1
 -----------
 - Made multiple info windows an option, not the default, for Google v3 and OpenLayers
