@@ -73,10 +73,11 @@ TimeMap.loaders.gss = function(options) {
         paramMap = options.paramMap || {},
         extraColumns = options.extraColumns || [];
     
-    // use key if no URL was supplied
-    if (!loader.opts.url && options.key) {
-        loader.opts.url = "http://spreadsheets.google.com/feeds/list/" + 
-            options.key + "/1/public/values?alt=json-in-script&callback=?";
+    // build URL if not supplied
+    if (!loader.opts.url && options.apikey && options.sheetsid && options.sheetname ) {
+        loader.opts.url = "https://sheets.googleapis.com/v4/spreadsheets/"
+            + options.sheetsid + "/values/" + options.sheetname + "alt=json&key="
+            + options.apikey +"&callback=?";
     }
     
     // Set up additional columns
@@ -100,8 +101,17 @@ TimeMap.loaders.gss = function(options) {
      * @parameter {Object} data     Data to preload
      * @return {Array} data         Array of item data
      */
-    loader.preload = function(data) {
-        return data.feed.entry;
+    loader.preload = function(gFourData) {
+        var columnHeaders = gFourData.values.shift(),
+            data = [];
+        gFourData.values.forEach( row => {
+            var rowObj = {};
+            row.forEach( (entry,colIndex) => {
+                rowObj[columnHeaders[colIndex]]=entry
+            });
+            data.push(rowObj);
+        });
+        return data;
     };
     
     /**
