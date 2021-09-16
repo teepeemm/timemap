@@ -2499,33 +2499,6 @@ TimeMap.util.lookup = function(key, map) {
 };
 
 
-// add indexOf support for older browsers (simple version, no "from" support)
-if (!([].indexOf)) {
-    Array.prototype.indexOf = function(el) {
-        var a = this,
-            i = a.length;
-        while (--i >= 0) {
-            if (a[i] === el) {
-                break;
-            }
-        }
-        return i;
-    };
-}
-
-// add forEach support for older browsers (simple version, no "this" support)
-if (!([].forEach)) {
-    Array.prototype.forEach = function(f) {
-        var a = this,
-            i;
-        for (i=0; i < a.length; i++) {
-            if (i in a) {
-                f(a[i], i, a);
-            }
-        }
-    };
-}
-
 /*----------------------------------------------------------------------------
  * Lookup maps
  * (need to be at end because some call util functions on initialization)
