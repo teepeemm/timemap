@@ -1679,7 +1679,7 @@ TimeMapItem = function(data, dataset) {
                     TimeMapItem.openInfoWindowBasic,
                 infoTemplate: '<div class="infotitle">{{title}}</div>' + 
                               '<div class="infodescription">{{description}}</div>',
-                templatePattern: /\{\{([^}]+)\}\}/g,
+                templatePattern: /\{\{([^}]+)\}\}/,
                 closeInfoWindow: TimeMapItem.closeInfoWindowBasic
             }, data.options),
         tm = dataset.timemap,
@@ -2186,6 +2186,7 @@ TimeMapItem.prototype = {
             // fill in template
             html = opts.infoTemplate;
             match = patt.exec(html);
+            // this would work better as replaceAll(//g,func), but that's not supported by IE
             while (match) {
                 html = html.replace(match[0], opts[match[1]]||'');
                 match = patt.exec(html);
