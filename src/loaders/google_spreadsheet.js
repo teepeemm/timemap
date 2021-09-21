@@ -21,7 +21,7 @@
  * to indicate which columns contain which data elements; the default column
  * names (case-insensitive) are: title, description, start, end, lat, lon</p>
  * 
- * <p>See <a href="http://code.google.com/apis/spreadsheets/docs/2.0/reference.html#gsx_reference">http://code.google.com/apis/spreadsheets/docs/2.0/reference.html#gsx_reference</a>
+ * <p>See <a href="https://code.google.com/apis/spreadsheets/docs/2.0/reference.html#gsx_reference">https://code.google.com/apis/spreadsheets/docs/2.0/reference.html#gsx_reference</a>
  * for details on how spreadsheet column ids are derived. Note that date fields 
  * must be in yyyy-mm-dd format - you may need to set the cell format as "plain text" 
  * in the spreadsheet (Google's automatic date formatting won't work).</p>
@@ -47,7 +47,7 @@ TimeMap.init({
             title: "Google Spreadsheet by url",
             type: "gss",
             options: {
-                url: "http://spreadsheets.google.com/feeds/list/pjUcDAp-oNIOjmx3LCxT4XA/1/public/values?alt=json-in-script&callback="
+                url: "https://spreadsheets.google.com/feeds/list/pjUcDAp-oNIOjmx3LCxT4XA/1/public/values?alt=json-in-script&callback="
             }
         }
     ],

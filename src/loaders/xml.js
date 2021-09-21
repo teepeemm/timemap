@@ -45,7 +45,7 @@ TimeMap.loaders.xml = function(options) {
         // get loader callback name (allows cancellation)
         loader.callbackName = loader.getCallbackName(dataset, callback);
         // set the callback function
-        // see http://docs.jquery.com/Specifying_the_Data_Type_for_AJAX_Requests
+        // see https://docs.jquery.com/Specifying_the_Data_Type_for_AJAX_Requests
         loader.opts.dataType =  $.browser.msie ? "text" : "xml";
         loader.opts.success = function(data) {
             var xml;

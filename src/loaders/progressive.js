@@ -32,7 +32,7 @@ TimeMap.init({
             type: "progressive",
             options: {
                 type: "jsonp",
-                url: "http://www.test.com/getsomejson.php?start=[start]&end=[end]callback="
+                url: "https://www.test.com/getsomejson.php?start=[start]&end=[end]callback="
             }
         }
     ],

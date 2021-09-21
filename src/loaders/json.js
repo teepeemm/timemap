@@ -22,8 +22,8 @@
  * the last URL parameter.
  *
  * <p>The jsonp loader assumes that the JSON can be loaded from a url with a "?" instead of
- * the callback function name, e.g. "http://www.test.com/getsomejson.php?callback=?". See
- * <a href="http://api.jquery.com/jQuery.ajax/">the jQuery.ajax documentation</a> for more
+ * the callback function name, e.g. "https://www.test.com/getsomejson.php?callback=?". See
+ * <a href="https://api.jquery.com/jQuery.ajax/">the jQuery.ajax documentation</a> for more
  * details on how to format the url, especially if the parameter is not called "callback".
  * This works for services like Google Spreadsheets, etc., and accepts remote URLs.</p>
  * @name TimeMap.loaders.jsonp
@@ -36,7 +36,7 @@ TimeMap.init({
             title: "JSONP Dataset",
             type: "jsonp",
             options: {
-                url: "http://www.example.com/getsomejson.php?callback=?"
+                url: "https://www.example.com/getsomejson.php?callback=?"
             }
         }
     ],

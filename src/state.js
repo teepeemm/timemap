@@ -116,7 +116,7 @@ var paramNS = TimeMap.params,
  };
  
  // get state settings from the URL, e.g.:
- // http://www.example.com/mytimemap.html#zoom=4&selected=1
+ // https://www.example.com/mytimemap.html#zoom=4&selected=1
  TimeMap.state.setConfigFromUrl(config);
  
  // initialize TimeMap object

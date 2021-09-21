@@ -18,7 +18,7 @@
  *
  * <p>This is a loader class for KML files. Currently supports all geometry
  * types (point, polyline, polygon, and overlay) and multiple geometries. Supports loading
- * <a href="http://code.google.com/apis/kml/documentation/extendeddata.html">ExtendedData</a>
+ * <a href="https://code.google.com/apis/kml/documentation/extendeddata.html">ExtendedData</a>
  * through the extendedData parameter.
  * </p>
  *

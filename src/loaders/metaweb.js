@@ -40,7 +40,7 @@ TimeMap.init({
                 ],
                 transformFunction: function(data) {
                     // map returned data to the expected format - see
-                    // http://code.google.com/p/timemap/wiki/JsonFormat
+                    // https://code.google.com/p/timemap/wiki/JsonFormat
                     return data;
                 }
             }

@@ -18,7 +18,7 @@
  * Flickr loader: Load JSONP data from Flickr. 
  *
  * <p>This is a loader for Flickr data. You probably want to use it with a
- * URL for the Flickr Geo Feed API: <a href="http://www.flickr.com/services/feeds/geo/">http://www.flickr.com/services/feeds/geo/</a></p>
+ * URL for the Flickr Geo Feed API: <a href="https://www.flickr.com/services/feeds/geo/">https://www.flickr.com/services/feeds/geo/</a></p>
  *
  * <p>The loader takes a full URL, minus the JSONP callback function.</p>
  *
@@ -34,7 +34,7 @@ TimeMap.init({
             options: {
                 // This is just the latest geotagged photo stream - try adding
                 // an "id" or "tag" or "photoset" parameter to get what you want
-                url: "http://www.flickr.com/services/feeds/geo/?format=json&jsoncallback=?"
+                url: "https://www.flickr.com/services/feeds/geo/?format=json&jsoncallback=?"
             }
         }
     ],
