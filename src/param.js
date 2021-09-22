@@ -16,7 +16,7 @@
 
 /**
  * @name TimeMap.params
- * @namespace Namespace for parameter classes
+ * @namespace TimeMap.params
  */
 var params = TimeMap.params = {
     /**
@@ -140,7 +140,7 @@ var params = TimeMap.params = {
          * @function
          * 
          * @param {Object} config       Config object to modify
-         * @param {XML NodeList} node   Parent node of the desired tag
+         * @param {XMLElement} node   Parent node of the desired tag (or is the type XMLElement[] ? It had been XML NodeList.)
          */
         param.setConfigXML = options.setConfigXML || function(config, node) {
             var tagName = param.sourceName,
@@ -220,7 +220,7 @@ var params = TimeMap.params = {
  *---------------------------------------------------------------------------*/
 
 /**
- * @namespace Namespace for parameters used for loading data into a TimeMapItem 
+ * Object for parameters used for loading data into a TimeMapItem
  * object. Because these are intended for loading, only setConfig is defined.
  */
 TimeMap.loaders.base.prototype.params = {

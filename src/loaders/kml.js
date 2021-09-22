@@ -70,7 +70,7 @@ TimeMap.loaders.kml = function(options) {
  * Static function to parse KML with time data.
  *
  * @param {XML} kml      KML node to be parsed
- * @return {TimeMapItem Array}  Array of TimeMapItems
+ * @return {TimeMapItem[]}  Array of TimeMapItems
  */
 TimeMap.loaders.kml.parse = function(kmlnode) {
     var loader = this,
@@ -196,7 +196,7 @@ TimeMap.params.ExtendedDataParam = function(paramName, tagName) {
          * @function
          * 
          * @param {Object} config       Config object to modify
-         * @param {XML NodeList} node   Parent node to look for tags in
+         * @param {XMLElement} node   Parent node to look for tags in (or []?)
          */
         setConfigXML: function(config, node) {
             var util = TimeMap.util,

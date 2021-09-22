@@ -4,11 +4,14 @@ help:
 	@echo " help: this message"
 	@echo " bin : compiled js files"
 
-.PHONY: help
+.PHONY: help doc
 
 bin: timemap-full-pack.js timemap-pack.js
 
-timemap-full-pack.js: src/*.js src/ext/*.js src/loaders/*.js
+docs:
+	jsdoc --destination docs --recurse src
+
+timemap-full.pack.js: src/*.js src/ext/*.js src/loaders/*.js
 	. ./variables.sh ; \
 	java \
 	-jar "$${COMPILER_JAR}" \

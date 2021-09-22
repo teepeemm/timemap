@@ -24,10 +24,11 @@ var paramNS = TimeMap.params,
 
     /**
      * @name TimeMap.state
-     * @namespace Namespace for static state functions used to 
+     * Object for static state functions used to
      * set the timemap state programmatically, either in a script or 
      * from the url hash.
      * @see <a href="../../examples/state.html#zoom=8&center=44.04811573082351,13.29345703125&date=1500-01-21T12:17:37Z&selected=0">State Example</a>
+     * @namespace TimeMap.state
      */
     stateNS = TimeMap.state = {
     
@@ -216,9 +217,9 @@ TimeMap.prototype.getStateUrl = function() {
  *---------------------------------------------------------------------------*/
 
 /**
- * @namespace
  * Namespace for state parameters, each with a set of functions to set and serialize values.
  * Add your own Param objects to this namespace to get and set additional state variables.
+ * @namespace
  */
 TimeMap.state.params = {
         

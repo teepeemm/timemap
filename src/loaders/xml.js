@@ -84,7 +84,7 @@ TimeMap.loaders.xml = function(options) {
      * @function
      *
      * @param {Object} config       Config object to modify
-     * @param {XML NodeList} node   Parent node to look for tags in
+     * @param {XMLElement} node   Parent node to look for tags in (or []?)
      */
     loader.parseExtra = function(config, node) {
         loader.extraParams.forEach(function(ep) {

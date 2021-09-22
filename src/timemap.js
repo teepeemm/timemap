@@ -64,14 +64,12 @@ var
  *---------------------------------------------------------------------------*/
  
 /**
- * @class
  * The TimeMap object holds references to timeline, map, and datasets.
  *
- * @constructor
  * This will create the visible map, but not the timeline, which must be initialized separately.
  *
- * @param {DOM Element} tElement     The timeline element.
- * @param {DOM Element} mElement     The map element.
+ * @param {HTMLElement} tElement     The timeline element.
+ * @param {HTMLElement} mElement     The map element.
  * @param {Object} [options]       A container for optional arguments
  * @param {TimeMapTheme|String} [options.theme=red] Color theme for the timemap
  * @param {Boolean} [options.syncBands=true]    Whether to synchronize all bands in timeline
@@ -97,6 +95,7 @@ var
  *                                              to cascade to the entire TimeMap, though they can be overridden
  *                                              at lower levels
  * </pre>
+ * @constructor
  */
 TimeMap = function(tElement, mElement, options) {
     var tm = this,
@@ -121,13 +120,13 @@ TimeMap = function(tElement, mElement, options) {
     /**
      * Map element
      * @name TimeMap#mElement
-     * @type DOM Element
+     * @type HTMLElement
      */
     tm.mElement = mElement;
     /**
      * Timeline element
      * @name TimeMap#tElement
-     * @type DOM Element
+     * @type HTMLElement
      */
     tm.tElement = tElement;
     
@@ -178,8 +177,8 @@ TimeMap.version = "2.1pre";
 
 /**
  * @name TimeMap.util
- * @namespace
  * Namespace for TimeMap utility functions.
+ * @namespace TimeMap.util
  */
 var util = TimeMap.util = {};
 
@@ -415,7 +414,7 @@ TimeMap.prototype = {
      * Initialize the timeline - this must happen separately to allow full control of 
      * timeline properties.
      *
-     * @param {BandInfo Array} bands    Array of band information objects for timeline
+     * @param {BandInfo[]} bands    Array of band information objects for timeline
      */
     initTimeline: function(bands) {
         var tm = this, timeline,
@@ -837,7 +836,6 @@ TimeMap.loadManager = new function() {
  *---------------------------------------------------------------------------*/
  
 /**
- * @namespace
  * Namespace for different data loader functions.
  * New loaders can add their factories or constructors to this object; loader
  * functions are passed an object with parameters in TimeMap.init().
@@ -856,12 +854,12 @@ TimeMap.loadManager = new function() {
         ],
         // etc...
     });
+ * @namespace TimeMap.loaders
  */
 TimeMap.loaders = {
 
     /**
-     * @namespace
-     * Namespace for storing callback functions
+     * Object for storing callback functions
      * @private
      */
     cb: {},
@@ -874,6 +872,7 @@ TimeMap.loaders = {
      */
     cancel: function(callbackName) {
         var namespace = TimeMap.loaders.cb;
+        // is namespace the right word here?
         // replace with self-cancellation function
         namespace[callbackName] = function() {
             delete namespace[callbackName];
@@ -1251,7 +1250,6 @@ TimeMapFilterChain.prototype = {
 };
 
 /**
- * @namespace
  * Namespace for different filter functions. Adding new filters to this
  * namespace allows them to be specified by string name.
  * @example
@@ -1261,6 +1259,7 @@ TimeMapFilterChain.prototype = {
         },
         // etc...
     });
+ * @namespace TimeMap.filters
  */
 TimeMap.filters = {
 
@@ -2316,7 +2315,7 @@ TimeMap.util.nsMap = {};
  * Note: Expects any applicable namespaces to be mapped in
  * {@link TimeMap.util.nsMap}.
  *
- * @param {jQuery|XML Node} n   jQuery object with context, or XML node
+ * @param {jQuery|XMLElement} n   jQuery object with context, or XML node
  * @param {String} tag          Name of tag to look for
  * @param {String} [ns]         XML namespace to look in
  * @return {jQuery}             jQuery object with the list of nodes found
@@ -2505,8 +2504,7 @@ TimeMap.util.lookup = function(key, map) {
  *---------------------------------------------------------------------------*/
 
 /**
- * @namespace
- * Lookup map of common timeline intervals.  
+ * Lookup map of common timeline intervals.
  * Add custom intervals here if you want to refer to them by key rather 
  * than as a function name.
  * @example
@@ -2536,7 +2534,6 @@ TimeMap.intervals = {
 };
 
 /**
- * @namespace
  * Lookup map of map types.
  * @example
     TimeMap.init({
@@ -2558,8 +2555,7 @@ TimeMap.mapTypes = {
 };
 
 /**
- * @namespace
- * Lookup map of supported date parser functions. 
+ * Lookup map of supported date parser functions.
  * Add custom date parsers here if you want to refer to them by key rather 
  * than as a function name.
  * @example
@@ -2673,8 +2669,7 @@ TimeMap.dateParsers = {
 };
  
 /**
- * @namespace
- * Pre-set event/placemark themes in a variety of colors. 
+ * Pre-set event/placemark themes in a variety of colors.
  * Add custom themes here if you want to refer to them by key rather 
  * than as a function name.
  * @example
