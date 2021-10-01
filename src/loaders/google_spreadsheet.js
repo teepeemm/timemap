@@ -12,7 +12,7 @@
 
 // for JSLint
 /*global TimeMap, TimeMapItem */
- 
+
 /**
  * @class
  * Google Spreadsheet loader.
@@ -66,34 +66,30 @@ TimeMap.init({
  *                                                  loaded into the item.opts object.
  * @param {mixed} [options[...]]    Other options (see {@link TimeMap.loaders.jsonp})
  */
-TimeMap.loaders.gss = function(options) {
+TimeMap.loaders.gss = function (options) {
     var loader = new TimeMap.loaders.jsonp(options),
         params = loader.params, paramName, x,
         setParamField = TimeMap.loaders.gss.setParamField,
         paramMap = options.paramMap || {},
         extraColumns = options.extraColumns || [];
-    
+
     // build URL if not supplied
-    if (!loader.opts.url && options.apikey && options.sheetsid && options.sheetname ) {
+    if (!loader.opts.url && options.apikey && options.sheetsid && options.sheetname) {
         loader.opts.url = "https://sheets.googleapis.com/v4/spreadsheets/"
             + options.sheetsid + "/values/" + options.sheetname + "?alt=json&key="
-            + options.apikey +"&callback=?";
+            + options.apikey + "&callback=?";
     }
-    
+
     // Set up additional columns
-    for (x=0; x < extraColumns.length; x++) {
-        paramName = extraColumns[x];
+    extraColumns.forEach(function (paramName) {
         params[paramName] = new TimeMap.params.OptionParam(paramName);
-    }
-    
+    });
+
     // Set up parameters to work with Google Spreadsheets
-    for (paramName in params) {
-        if (params.hasOwnProperty(paramName)) {
-            fieldName = paramMap[paramName] || paramName;
-            setParamField(params[paramName], fieldName);
-        }
-    }
-    
+    Object.entries(params).forEach( function ([paramName,paramValue]) {
+        setParamField(paramValue, paramMap[paramName] || paramName);
+    });
+
     /**
      * Preload function for spreadsheet data
      * @name TimeMap.loaders.gss#preload
@@ -101,10 +97,10 @@ TimeMap.loaders.gss = function(options) {
      * @parameter {Object} data     Data to preload
      * @return {Array} data         Array of item data
      */
-    loader.preload = function(gFourData) {
+    loader.preload = function (gFourData) {
         var columnHeaders = gFourData.values.shift(),
             data = [];
-        gFourData.values.forEach( row => {
+        gFourData.values.forEach( (row) => {
             var rowObj = {};
             row.forEach( (entry,colIndex) => {
                 rowObj[columnHeaders[colIndex]]=entry
@@ -121,7 +117,7 @@ TimeMap.loaders.gss = function(options) {
      * @parameter {Object} data     Data to transform
      * @return {Object} data        Transformed data for one item
      */
-    loader.transform = function(data) {
+    loader.transform = function (data) {
         var item = {}, params = loader.params, paramName,
             transform = options.transformFunction;
         // run through parameters, loading each
@@ -146,15 +142,15 @@ TimeMap.loaders.gss = function(options) {
  * @param {TimeMap.Param} param     Param object
  * @param {String} fieldName        Name of the field
  */
-TimeMap.loaders.gss.setParamField = function(param, fieldName) {
+TimeMap.loaders.gss.setParamField = function (param, fieldName) {
     // internal function: Get the value of a Google Spreadsheet field
-    var getField = function(data, fieldName) {
+    var getField = function (data, fieldName) {
         // get element, converting field name to GSS format
         var el = data[fieldName];
         return el ? el : null;
     };
     // set the method on the parameter
-    param.setConfigGSS = function(config, data) {
+    param.setConfigGSS = function (config, data) {
         this.setConfig(config, getField(data, fieldName));
     };
 };

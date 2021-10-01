@@ -2,7 +2,7 @@
  * Timemap.js Copyright 2010 Nick Rabinowitz.
  * Licensed under the MIT License (see LICENSE.txt)
  */
- 
+
 /**
  * @fileOverview
  * KML Loader
@@ -10,7 +10,7 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-/*globals TimeMap */
+/*globals TimeMap, $ */
 
 /**
  * @class
@@ -49,18 +49,18 @@ TimeMap.init({
  * @param {mixed} [options[...]]            Other options (see {@link TimeMap.loaders.xml})
  * @return {TimeMap.loaders.xml}    Loader configured for KML
  */
-TimeMap.loaders.kml = function(options) {
+TimeMap.loaders.kml = function (options) {
     var loader = new TimeMap.loaders.xml(options),
         tagMap = options.tagMap || {},
         extendedData = options.extendedData || [];
-    
+
     // Add ExtendedData parameters to extra params
-    extendedData.forEach(function(tagName) {
+    extendedData.forEach(function (tagName) {
         loader.extraParams.push(
             new TimeMap.params.ExtendedDataParam(tagMap[tagName] || tagName, tagName)
         );
     });
-    
+
     // set custom parser
     loader.parse = TimeMap.loaders.kml.parse;
     return loader;
@@ -72,24 +72,25 @@ TimeMap.loaders.kml = function(options) {
  * @param {XML} kml      KML node to be parsed
  * @return {TimeMapItem[]}  Array of TimeMapItems
  */
-TimeMap.loaders.kml.parse = function(kmlnode) {
+TimeMap.loaders.kml.parse = function (kmlnode) {
     var loader = this,
-        items = [], 
-        data, placemarks, nList, coords, pmobj;
-    
-    // get TimeMap utilty functions
-    // assigning to variables should compress better
-    var util = TimeMap.util,
+        items = [],
+        data, nList, coords, pmobj,
+
+        // get TimeMap utilty functions
+        // assigning to variables should compress better
+        util = TimeMap.util,
         getTagValue = util.getTagValue,
         getNodeList = util.getNodeList,
         makePoint = util.makePoint,
         makePoly = util.makePoly,
         formatDate = util.formatDate;
-    
+
     // recursive time data search
     function findNodeTime(n, data) {
         var tstamp = $(n).children("TimeStamp"),
-            tspan = $(n).children("TimeSpan");
+            tspan = $(n).children("TimeSpan"),
+            $pn;
         // set start if found
         if (tspan.length) {
             data.start = getTagValue(tspan, 'begin');
@@ -101,15 +102,15 @@ TimeMap.loaders.kml.parse = function(kmlnode) {
         }
         // try looking recursively at parent nodes
         if (!data.start) {
-            var $pn = $(n).parent();
+            $pn = $(n).parent();
             if ($pn.is("Folder") || $pn.is("Document")) {
                 findNodeTime($pn, data);
             }
         }
     }
-    
+
     // look for placemarks
-    getNodeList(kmlnode, "Placemark").each(function() {
+    getNodeList(kmlnode, "Placemark").each(function () {
         var pm = this;
         data = { options: {} };
         // get title & description
@@ -120,7 +121,7 @@ TimeMap.loaders.kml.parse = function(kmlnode) {
         // find placemark(s)
         data.placemarks = [];
         // look for marker
-        getNodeList(pm, "Point").each(function() {
+        getNodeList(pm, "Point").each(function () {
             pmobj = { point: {} };
             // get lat/lon
             coords = getTagValue(this, "coordinates");
@@ -128,7 +129,7 @@ TimeMap.loaders.kml.parse = function(kmlnode) {
             data.placemarks.push(pmobj);
         });
         // look for polylines
-        getNodeList(pm, "LineString").each(function() {
+        getNodeList(pm, "LineString").each(function () {
             pmobj = { polyline: [] };
             // get lat/lon
             coords = getTagValue(this, "coordinates");
@@ -136,7 +137,7 @@ TimeMap.loaders.kml.parse = function(kmlnode) {
             data.placemarks.push(pmobj);
         });
         // look for polygons
-        getNodeList(pm, "Polygon").each(function() {
+        getNodeList(pm, "Polygon").each(function () {
             pmobj = { polygon: [] };
             // get lat/lon
             coords = getTagValue(this, "coordinates");
@@ -145,12 +146,12 @@ TimeMap.loaders.kml.parse = function(kmlnode) {
         });
         // look for any extra tags and/or ExtendedData specified
         loader.parseExtra(data, pm);
-        
+
         items.push(data);
     });
-    
+
     // look for ground overlays
-    getNodeList(kmlnode, "GroundOverlay").each(function() {
+    getNodeList(kmlnode, "GroundOverlay").each(function () {
         var pm = this;
         data = { options: {}, overlay: {} };
         // get title & description
@@ -170,10 +171,10 @@ TimeMap.loaders.kml.parse = function(kmlnode) {
         loader.parseExtra(data, pm);
         items.push(data);
     });
-    
+
     // clean up
     kmlnode = null;
-    
+
     return items;
 };
 
@@ -187,9 +188,9 @@ TimeMap.loaders.kml.parse = function(kmlnode) {
  * @param {String} paramName        String name of the parameter
  * @param {String} [tagName]        Tag name, if different
  */
-TimeMap.params.ExtendedDataParam = function(paramName, tagName) {
+TimeMap.params.ExtendedDataParam = function (paramName, tagName) {
     return new TimeMap.params.OptionParam(paramName, {
-    
+
         /**
          * Set a config object based on an ExtendedData element
          * @name TimeMap.params.ExtendedDataParam#setConfigKML
@@ -198,18 +199,18 @@ TimeMap.params.ExtendedDataParam = function(paramName, tagName) {
          * @param {Object} config       Config object to modify
          * @param {XMLElement} node   Parent node to look for tags in (or []?)
          */
-        setConfigXML: function(config, node) {
+        setConfigXML: function (config, node) {
             var util = TimeMap.util,
                 param = this;
-            util.getNodeList(node, "Data").each(function() {
+            util.getNodeList(node, "Data").each(function () {
                 var $n = $(this);
-                if ($n.attr("name") == tagName) {
+                if ($n.attr("name") === tagName) {
                     param.setConfig(config, util.getTagValue($n, "value"));
                 }
             });
         },
-        
+
         sourceName: tagName
-    
+
     });
 };

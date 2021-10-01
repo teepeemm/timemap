@@ -2,15 +2,15 @@
  * Timemap.js Copyright 2010 Nick Rabinowitz.
  * Licensed under the MIT License (see LICENSE.txt)
  */
- 
+
 /**
  * @fileOverview
  * XML Loader
  *
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
- 
-/*globals TimeMap */
+
+/*globals TimeMap, $, ActiveXObject */
 
  /**
  * @class
@@ -27,12 +27,12 @@
  * @param {mixed} [options[...]]            Other options (see {@link TimeMap.loaders.remote})
  * @return {TimeMap.loaders.remote} Remote loader configured for XML
  */
-TimeMap.loaders.xml = function(options) {
+TimeMap.loaders.xml = function (options) {
     var loader = new TimeMap.loaders.remote(options),
         tagMap = options.tagMap || {},
         extraTags = options.extraTags || [],
         params = loader.params;
-    
+
     /**
      * Load function for remote XML files.
      * @name TimeMap.loaders.xml#load
@@ -41,15 +41,15 @@ TimeMap.loaders.xml = function(options) {
      * @param {TimeMapDataset} dataset  Dataset to load data into
      * @param {Function} callback       Function to call once data is loaded
      */
-    loader.load = function(dataset, callback) {
+    loader.load = function (dataset, callback) {
         // get loader callback name (allows cancellation)
         loader.callbackName = loader.getCallbackName(dataset, callback);
         // set the callback function
         // see https://docs.jquery.com/Specifying_the_Data_Type_for_AJAX_Requests
         loader.opts.dataType =  $.browser.msie ? "text" : "xml";
-        loader.opts.success = function(data) {
+        loader.opts.success = function (data) {
             var xml;
-            if (typeof data == "string") {
+            if (typeof data === "string") {
                 xml = new ActiveXObject("Microsoft.XMLDOM");
                 xml.async = false;
                 xml.loadXML(data);
@@ -61,23 +61,23 @@ TimeMap.loaders.xml = function(options) {
         // download remote data
         $.ajax(loader.opts);
     };
-    
+
     /**
      * Additional parameters to load
      * @name TimeMap.loaders.xml#extraParams
      * @type TimeMap.params.OptionParam[]
      */
     loader.extraParams = [];
-    
+
     // set up extra params
-    extraTags.forEach(function(tagName) {
+    extraTags.forEach(function (tagName) {
         loader.extraParams.push(
             new TimeMap.params.OptionParam(tagMap[tagName] || tagName, {
                 sourceName: tagName
             })
         );
     });
-    
+
     /**
      * Parse any extra tags that have been specified into the config object
      * @name TimeMap.loaders.xml#parseExtra
@@ -86,12 +86,12 @@ TimeMap.loaders.xml = function(options) {
      * @param {Object} config       Config object to modify
      * @param {XMLElement} node   Parent node to look for tags in (or []?)
      */
-    loader.parseExtra = function(config, node) {
-        loader.extraParams.forEach(function(ep) {
+    loader.parseExtra = function (config, node) {
+        loader.extraParams.forEach(function (ep) {
             ep.setConfigXML(config, node);
         });
         node = null;
     };
-    
+
     return loader;
 };

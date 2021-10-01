@@ -1,3 +1,8 @@
+
+/*global
+ Timeline
+*/
+
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.
  * Licensed under the MIT License (see LICENSE.txt)
@@ -11,28 +16,29 @@
  *
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
- 
-(function(){
+
+(function () {
     var window = this,
-        TimeMap = window.TimeMap, 
-        TimeMapDataset = window.TimeMapDataset, 
+        TimeMap = window.TimeMap,
+        TimeMapDataset = window.TimeMapDataset,
         TimeMapItem = window.TimeMapItem,
         util = TimeMap.util;
-        
+
 /*----------------------------------------------------------------------------
  * TimeMap manipulation: stuff affecting every dataset
  *---------------------------------------------------------------------------*/
 
 // XXX: This should $.extend the prototype, I think
- 
+
 /**
  * Delete all datasets, clearing them from map and timeline. Note
  * that this is more efficient than calling clear() on each dataset.
  */
-TimeMap.prototype.clear = function() {
+TimeMap.prototype.clear = function () {
     var tm = this;
-    tm.eachItem(function(item) {
-        item.event = item.placemark = null;
+    tm.eachItem(function (item) {
+        item.event = null;
+        item.placemark = null;
     });
     tm.map.removeAllPolylines();
     tm.map.removeAllMarkers();
@@ -45,7 +51,7 @@ TimeMap.prototype.clear = function() {
  *
  * @param {String} id    Id of dataset to delete
  */
-TimeMap.prototype.deleteDataset = function(id) {
+TimeMap.prototype.deleteDataset = function (id) {
     this.datasets[id].clear();
     delete this.datasets[id];
 };
@@ -55,8 +61,8 @@ TimeMap.prototype.deleteDataset = function(id) {
  * 
  * @param {String} id   The id of the dataset to hide
  */
-TimeMap.prototype.hideDataset = function (id){
-    if (id in this.datasets) {
+TimeMap.prototype.hideDataset = function (id) {
+    if (this.datasets[id]) {
         this.datasets[id].hide();
     }
 };
@@ -64,9 +70,9 @@ TimeMap.prototype.hideDataset = function (id){
 /**
  * Hides all the datasets on the map
  */
-TimeMap.prototype.hideDatasets = function(){
+TimeMap.prototype.hideDatasets = function () {
     var tm = this;
-    tm.each(function(ds) {
+    tm.each(function (ds) {
         ds.visible = false;
     });
     tm.filter("map");
@@ -78,8 +84,8 @@ TimeMap.prototype.hideDatasets = function(){
  * 
  * @param {String} id   The id of the dataset to hide
  */
-TimeMap.prototype.showDataset = function(id) {
-    if (id in this.datasets) {
+TimeMap.prototype.showDataset = function (id) {
+    if (this.datasets[id]) {
         this.datasets[id].show();
     }
 };
@@ -87,15 +93,15 @@ TimeMap.prototype.showDataset = function(id) {
 /**
  * Shows all the datasets on the map
  */
-TimeMap.prototype.showDatasets = function() {
+TimeMap.prototype.showDatasets = function () {
     var tm = this;
-    tm.each(function(ds) {
+    tm.each(function (ds) {
         ds.visible = true;
     });
     tm.filter("map");
     tm.filter("timeline");
 };
- 
+
 /**
  * Change the default map type
  *
@@ -104,11 +110,11 @@ TimeMap.prototype.showDatasets = function() {
 TimeMap.prototype.changeMapType = function (mapType) {
     var tm = this;
     // check for no change
-    if (mapType == tm.opts.mapType) {
+    if (mapType === tm.opts.mapType) {
         return;
     }
     // look for mapType
-    if (typeof(mapType) == 'string') {
+    if (typeof mapType === 'string') {
         mapType = TimeMap.mapTypes[mapType];
     }
     // no mapType specified
@@ -128,9 +134,9 @@ TimeMap.prototype.changeMapType = function (mapType) {
  * Refresh the timeline, maintaining the current date
  */
 TimeMap.prototype.refreshTimeline = function () {
-    var topband = this.timeline.getBand(0);
-    var centerDate = topband.getCenterVisibleDate();
-    if (util.TimelineVersion() == "1.2") {
+    var topband = this.timeline.getBand(0),
+        centerDate = topband.getCenterVisibleDate();
+    if (util.TimelineVersion() === "1.2") {
         topband.getEventPainter().getLayout()._laidout = false;
     }
     this.timeline.layout();
@@ -143,9 +149,13 @@ TimeMap.prototype.refreshTimeline = function () {
  * @param {String|Array} intervals   New intervals. If string, looks up in TimeMap.intervals.
  */
 TimeMap.prototype.changeTimeIntervals = function (intervals) {
-    var tm = this;
+    var tm = this,
+        // grab date
+        topband = tm.timeline.getBand(0),
+        centerDate = topband.getCenterVisibleDate(),
+        x;
     // check for no change or no intervals
-    if (!intervals || intervals == tm.opts.bandIntervals) {
+    if (!intervals || intervals === tm.opts.bandIntervals) {
         return;
     }
     // resolve string references if necessary
@@ -156,12 +166,8 @@ TimeMap.prototype.changeTimeIntervals = function (intervals) {
         band.getEther()._interval = Timeline.DateTime.gregorianUnitLengths[interval];
         band.getEtherPainter()._unit = interval;
     }
-    // grab date
-    var topband = tm.timeline.getBand(0),
-        centerDate = topband.getCenterVisibleDate(),
-        x;
     // change interval for each band
-    for (x=0; x<tm.timeline.getBandCount(); x++) {
+    for (x = 0; x < tm.timeline.getBandCount(); x+=1) {
         changeInterval(tm.timeline.getBand(x), intervals[x]);
     }
     // re-layout timeline
@@ -180,9 +186,9 @@ TimeMap.prototype.changeTimeIntervals = function (intervals) {
 /**
  * Delete all items, clearing them from map and timeline
  */
-TimeMapDataset.prototype.clear = function() {
+TimeMapDataset.prototype.clear = function () {
     var ds = this;
-    ds.each(function(item) {
+    ds.each(function (item) {
         item.clear(true);
     });
     ds.items = [];
@@ -194,21 +200,19 @@ TimeMapDataset.prototype.clear = function() {
  * 
  * @param {TimeMapItem} item      Item to delete
  */
-TimeMapDataset.prototype.deleteItem = function(item) {
-    var ds = this, x;
-    for (x=0; x < ds.items.length; x++) {
-        if (ds.items[x] == item) {
-            item.clear();
-            ds.items.splice(x, 1);
-            break;
-        }
+TimeMapDataset.prototype.deleteItem = function (item) {
+    var ds = this,
+        indexToDelete = ds.items.findIndex( (dsitem) => dsitem===item );
+    if ( indexToDelete >= 0 ) {
+        item.clear();
+        ds.items.splice(indexToDelete, 1);
     }
 };
 
 /**
  * Show dataset
  */
-TimeMapDataset.prototype.show = function() {
+TimeMapDataset.prototype.show = function () {
     var ds = this,
         tm = ds.timemap;
     if (!ds.visible) {
@@ -221,7 +225,7 @@ TimeMapDataset.prototype.show = function() {
 /**
  * Hide dataset
  */
-TimeMapDataset.prototype.hide = function() {
+TimeMapDataset.prototype.hide = function () {
     var ds = this,
         tm = ds.timemap;
     if (ds.visible) {
@@ -236,11 +240,11 @@ TimeMapDataset.prototype.hide = function() {
  *
  * @param {TimeMapTheme|String} theme   New theme, or string key in {@link TimeMap.themes}
  */
- TimeMapDataset.prototype.changeTheme = function(newTheme) {
+ TimeMapDataset.prototype.changeTheme = function (newTheme) {
     var ds = this;
     newTheme = util.lookup(newTheme, TimeMap.themes);
     ds.opts.theme = newTheme;
-    ds.each(function(item) {
+    ds.each(function (item) {
         item.changeTheme(newTheme, true);
     });
     ds.timemap.timeline.layout();
@@ -254,7 +258,7 @@ TimeMapDataset.prototype.hide = function() {
 /** 
  * Show event and placemark
  */
-TimeMapItem.prototype.show = function() {
+TimeMapItem.prototype.show = function () {
     var item = this;
     item.showEvent();
     item.showPlacemark();
@@ -264,7 +268,7 @@ TimeMapItem.prototype.show = function() {
 /** 
  * Hide event and placemark
  */
-TimeMapItem.prototype.hide = function() {
+TimeMapItem.prototype.hide = function () {
     var item = this;
     item.hideEvent();
     item.hidePlacemark();
@@ -276,9 +280,8 @@ TimeMapItem.prototype.hide = function() {
  * @param [suppressLayout]      Whether to suppress laying out the timeline 
  *                              (e.g. for batch operations)
  */
-TimeMapItem.prototype.clear = function(suppressLayout) {
-    var item = this,
-        i;
+TimeMapItem.prototype.clear = function (suppressLayout) {
+    var item = this;
     // remove event
     if (item.event) {
         // this is just ridiculous
@@ -291,23 +294,24 @@ TimeMapItem.prototype.clear = function(suppressLayout) {
     // remove placemark
     function removeOverlay(p) {
         try {
-            if (item.getType() == 'marker') {
+            if (item.getType() === 'marker') {
                 item.map.removeMarker(p);
             } 
             else {
                 item.map.removePolyline(p);
             }
-        } catch(e) {}
+        } catch(ignore) {}
     }
     if (item.placemark) {
         item.hidePlacemark();
-        if (item.getType() == "array") {
+        if (item.getType() === "array") {
             item.placemark.forEach(removeOverlay);
         } else {
             removeOverlay(item.placemark);
         }
     }
-    item.event = item.placemark = null;
+    item.event = null;
+    item.placemark = null;
 };
 
  /**
@@ -316,14 +320,15 @@ TimeMapItem.prototype.clear = function(suppressLayout) {
  * @param {Date} start      Start date for the event
  * @param {Date} [end]      End date for the event
  */
-TimeMapItem.prototype.createEvent = function(start, end) {
+TimeMapItem.prototype.createEvent = function (start, end) {
     var item = this,
         theme = item.opts.theme,
         instant = (end === undefined),
-        title = item.getTitle();
-    // create event
-    var event = new Timeline.DefaultEventSource.Event(start, end, null, null, instant, title, 
-        null, null, null, theme.eventIcon, theme.eventColor, null);
+        title = item.getTitle(),
+        // create event
+        event = new Timeline.DefaultEventSource.Event(start, end, null, null,
+                          instant, title, null, null, null, theme.eventIcon,
+                          theme.eventColor, null);
     // add references
     event.item = item;
     item.event = event;
@@ -338,12 +343,11 @@ TimeMapItem.prototype.createEvent = function(start, end) {
  * @param [suppressLayout]      Whether to suppress laying out the timeline 
  *                              (e.g. for batch operations)
  */
- TimeMapItem.prototype.changeTheme = function(newTheme, suppressLayout) {
+ TimeMapItem.prototype.changeTheme = function (newTheme, suppressLayout) {
     var item = this,
         type = item.getType(),
         event = item.event,
-        placemark = item.placemark,
-        i;
+        placemark = item.placemark;
     newTheme = util.lookup(newTheme, TimeMap.themes);
     item.opts.theme = newTheme;
     // internal function - takes type, placemark
@@ -354,7 +358,7 @@ TimeMapItem.prototype.createEvent = function(start, end) {
     }
     // change placemark
     if (placemark) {
-        if (type == 'array') {
+        if (type === 'array') {
             placemark.forEach(changePlacemark);
         } else {
             changePlacemark(placemark);
@@ -378,7 +382,7 @@ TimeMapItem.prototype.createEvent = function(start, end) {
  * @param {Boolean} [inDataset=false]   Whether to only look in this item's dataset
  * @return {TimeMapItem}                Next/previous item, if any
  */
-TimeMapItem.prototype.getNextPrev = function(backwards, inDataset) {
+TimeMapItem.prototype.getNextPrev = function (backwards, inDataset) {
     var item = this,
         eventSource = item.dataset.timemap.timeline.getBand(0).getEventSource(),
         // iterator dates are non-inclusive, hence the juggle here
@@ -397,7 +401,7 @@ TimeMapItem.prototype.getNextPrev = function(backwards, inDataset) {
     while (next === null) {
         if (i.hasNext()) {
             next = i.next().item;
-            if (inDataset && next.dataset != item.dataset) {
+            if (inDataset && next.dataset !== item.dataset) {
                 next = null;
             }
         } else {
@@ -413,7 +417,7 @@ TimeMapItem.prototype.getNextPrev = function(backwards, inDataset) {
  * @param {Boolean} [inDataset=false]   Whether to only look in this item's dataset
  * @return {TimeMapItem}                Next item, if any
  */
-TimeMapItem.prototype.getNext = function(inDataset) {
+TimeMapItem.prototype.getNext = function (inDataset) {
     return this.getNextPrev(false, inDataset);
 };
 
@@ -425,7 +429,7 @@ TimeMapItem.prototype.getNext = function(inDataset) {
  * @param {Boolean} [inDataset=false]   Whether to only look in this item's dataset
  * @return {TimeMapItem}                Next item, if any
  */
-TimeMapItem.prototype.getPrev = function(inDataset) {
+TimeMapItem.prototype.getPrev = function (inDataset) {
     return this.getNextPrev(true, inDataset);
 };
 

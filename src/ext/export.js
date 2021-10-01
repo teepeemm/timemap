@@ -1,3 +1,8 @@
+
+/* global
+ TimeMap, TimeMapDataset, TimeMapItem
+*/
+
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.
  * Licensed under the MIT License (see LICENSE.txt)
@@ -18,13 +23,11 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-/*globals TimeMap, TimeMapDataset, TimeMapItem */
- 
 /**
  * Clean up TimeMap into a nice object for serialization
  * This is called automatically by the JSON.stringify() function
  */
-TimeMap.prototype.toJSON = function() {
+TimeMap.prototype.toJSON = function () {
     var data = {
         'options': this.makeOptionData,
         'datasets': this.datasets
@@ -36,15 +39,12 @@ TimeMap.prototype.toJSON = function() {
 /**
  * Make a cleaned up object for the TimeMap options
  */
-TimeMap.prototype.makeOptionData = function() {
-    var data = {}, util = TimeMap.util;
-    // copy options
-    var opts = this.opts;
-    for (var k in opts) {
-        if (opts.hasOwnProperty(k)) {
-            data[k] = opts[k];
-        }
-    }
+TimeMap.prototype.makeOptionData = function () {
+    var data = {}, util = TimeMap.util,
+        // copy options
+        opts = this.opts,
+        k, mts=[], mt, x;
+    Object.entries(opts).forEach( ([k,v]) => data[k] = v );
     // clean up: mapCenter
     if (data.mapCenter) {
         data.mapCenter = util.makePoint(data.mapCenter);
@@ -55,13 +55,13 @@ TimeMap.prototype.makeOptionData = function() {
     }
     // clean up: mapTypes
     if (data.mapTypes) {
-        var mts=[], mt;
-        for (var x=0; x<data.mapTypes.length; x++) {
-            mt = util.revHash(TimeMap.mapTypes, data.mapTypes[x]);
+        mts=[];
+        data.mapTypes.forEach( function (mapType) {
+            mt = util.revHash(TimeMap.mapTypes, mapType);
             if (mt) {
                 mts.push(mt);
             }
-        }
+        });
         data.mapTypes = mts;
     }
     // clean up: bandIntervals
@@ -88,7 +88,7 @@ TimeMap.prototype.makeOptionData = function() {
  * @param {Object} data      Initial map of export data
  * @return {Object}          Expanded map of export data
  */
-TimeMap.prototype.addExportData = function(data) {
+TimeMap.prototype.addExportData = function (data) {
     data.options = data.options || {};
     // set any additional server info (e.g. a database key) in opts.saveOpts
     data.options.saveOpts = this.opts.saveOpts;
@@ -103,7 +103,7 @@ TimeMap.prototype.addExportData = function(data) {
  * datasets - so external data imported with JSON or KML will be serialized
  * in full and no longer connected to their original file.</p>
  */
-TimeMapDataset.prototype.toJSON = function() {
+TimeMapDataset.prototype.toJSON = function () {
     var data = {
         'title': this.getTitle(),
         'theme': TimeMap.util.revHash(TimeMapDataset.themes, this.opts.theme),
@@ -122,7 +122,7 @@ TimeMapDataset.prototype.toJSON = function() {
  * @param {Object} data      Initial map of export data
  * @return {Object}          Expanded map of export data
  */
-TimeMapDataset.prototype.addExportData = function(data) {
+TimeMapDataset.prototype.addExportData = function (data) {
     data.options = data.options || {};
     // set any additional server info (e.g. a database key) in opts.saveOpts
     data.options.saveOpts = this.opts.saveOpts;
@@ -135,7 +135,7 @@ TimeMapDataset.prototype.addExportData = function(data) {
  * Clean up item into a nice object for serialization.
  * This is called automatically by the JSON.stringify() function
  */
-TimeMapItem.prototype.toJSON = function() {
+TimeMapItem.prototype.toJSON = function () {
     // any additional info (e.g. a database key) should be set in opts.saveOpts
     var data = {
         'title': this.getTitle(),
@@ -154,7 +154,7 @@ TimeMapItem.prototype.toJSON = function() {
     if (this.placemark) {
         var util = TimeMap.util;
         // internal function - takes type, placemark, data
-        var makePlacemarkJSON = function(type, pm, pdata) {
+        var makePlacemarkJSON = function (type, pm, pdata) {
             type = type || util.getPlacemarkType(pm);
             switch (type) {
                 case "marker":
@@ -190,7 +190,7 @@ TimeMapItem.prototype.toJSON = function() {
  * @param {Object} data      Initial map of export data
  * @return {Object}          Expanded map of export data
  */
-TimeMapItem.prototype.addExportData = function(data) {
+TimeMapItem.prototype.addExportData = function (data) {
     data.options = data.options || {};
     // set any additional server info (e.g. a database key) in opts.saveOpts
     data.options.saveOpts = this.opts.saveOpts;
@@ -204,7 +204,7 @@ TimeMapItem.prototype.addExportData = function(data) {
  * @param {?} val           Value to look for
  * @return {String}         Key if found, null if not
  */
-TimeMap.util.revHash = function(map, val) {
+TimeMap.util.revHash = function (map, val) {
     for (var k in map) {
         if (map[k] == val) {
             return k;

@@ -9,7 +9,7 @@
  *
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
- 
+
 // for JSLint
 /*global TimeMap */
 
@@ -46,12 +46,12 @@ TimeMap.init({
  * @param {String} options.url          Full JSONP url of Flickr feed to load
  * @param {mixed} [options[...]]        Other options (see {@link TimeMap.loaders.jsonp})
  */
-TimeMap.loaders.flickr = function(options) {
+TimeMap.loaders.flickr = function (options) {
     var loader = new TimeMap.loaders.jsonp(options);
-    
+
     // set ajax settings for loader
     loader.opts.jsonp = 'jsoncallback';
-    
+
     /**
      * Preload function for Flickr feeds
      * @name TimeMap.loaders.flickr#preload
@@ -59,10 +59,10 @@ TimeMap.loaders.flickr = function(options) {
      * @parameter {Object} data     Data to preload
      * @return {Array} data         Array of item data
      */
-    loader.preload = function(data) {
+    loader.preload = function (data) {
         return data.items;
     };
-    
+
     /**
      * Transform function for Flickr feeds
      * @name TimeMap.loaders.flickr#transform
@@ -70,7 +70,7 @@ TimeMap.loaders.flickr = function(options) {
      * @parameter {Object} data     Data to transform
      * @return {Object} data        Transformed data for one item
      */
-    loader.transform = function(data) {
+    loader.transform = function (data) {
         var item = {
             title: data.title,
             start: data.date_taken,
@@ -86,7 +86,7 @@ TimeMap.loaders.flickr = function(options) {
             }
         };
         if (options.transformFunction) {
-            item = options.transformFunction(item);
+            item = options.transformfunction(item);
         }
         return item;
     };

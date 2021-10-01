@@ -6,3 +6,7 @@ timemap.pack.js
 timemap-full-pack.js
 timemap-full.pack.js
 docs/*
+specRunners/*
+tests/built_tests/*
+jslint.txt
+.DS_Store

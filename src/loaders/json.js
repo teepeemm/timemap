@@ -9,11 +9,10 @@
  *
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
- 
-// for JSLint
-/*global TimeMap */
 
-(function() {
+/* global TimeMap */
+
+(function () {
     var loaders = TimeMap.loaders;
 
 /**
@@ -48,12 +47,12 @@ TimeMap.init({
  * @param {String} options.url          URL of JSON service to load, callback name replaced with "?"
  * @param {mixed} [options[...]]        Other options (see {@link loaders.remote})
  */
-loaders.jsonp = function(options) {
+loaders.jsonp = function (options) {
     var loader = new loaders.remote(options);
-    
+
     // set ajax settings for loader
     loader.opts.dataType = 'jsonp';
-    
+
     return loader;
 };
 
@@ -86,12 +85,12 @@ TimeMap.init({
  * @param {String} options.url          URL of JSON file to load
  * @param {mixed} [options[...]]        Other options (see {@link loaders.remote})
  */
-loaders.json = function(options) {
+loaders.json = function (options) {
     var loader = new loaders.remote(options);
-    
+
     // set ajax settings for loader
-    loader.opts.dataType =  'json';
-    
+    loader.opts.dataType = 'json';
+
     return loader;
 };
 

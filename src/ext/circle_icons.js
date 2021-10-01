@@ -1,10 +1,13 @@
+/* global
+ TimeMapTheme, $
+*/
 
 /**
  * Create the URL for a Google Charts circle image.
  */
-TimeMapTheme.getCircleUrl = function(size, color, alpha) {
-    return "https://chart.apis.google.com/" + 
-        "chart?cht=it&chs=" + size + "x" + size + 
+TimeMapTheme.getCircleUrl = function (size, color, alpha) {
+    return "https://chart.apis.google.com/" +
+        "chart?cht=it&chs=" + size + "x" + size +
         "&chco=" + color + ",00000001,ffffff01" +
         "&chf=bg,s,00000000|a,s,000000" + alpha + "&ext=.png";
 };
@@ -19,23 +22,22 @@ TimeMapTheme.getCircleUrl = function(size, color, alpha) {
  * @param {String} [opts.alpha='bb']        Circle alpha (map), in AA hex
  * @param {String} [opts.eventAlpha='ff']   Circle alpha (event), in AA hex
  */
-TimeMapTheme.createCircleTheme = function(opts) {
+TimeMapTheme.createCircleTheme = function (opts) {
     var defaults = {
-            size:20,
-            color:'1f77b4',
-            alpha:'bb',
-            eventIconSize:10,
-            eventAlpha:'ff'
+            size:          20,
+            color:         '1f77b4',
+            alpha:         'bb',
+            eventIconSize: 10,
+            eventAlpha:    'ff'
         };
     opts = $.extend(defaults, opts);
     return new TimeMapTheme({
         icon: TimeMapTheme.getCircleUrl(opts.size, opts.color, opts.alpha),
         iconShadow: null,
-        iconShadowSize: [0,0],
+        iconShadowSize: [0, 0],
         iconSize: [opts.size, opts.size],
-        iconAnchor: [opts.size/2, opts.size/2],
+        iconAnchor: [ opts.size / 2, opts.size / 2 ],
         eventIcon: TimeMapTheme.getCircleUrl(opts.eventIconSize, opts.color, opts.eventAlpha),
         color: opts.color
     });
 };
- 

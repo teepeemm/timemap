@@ -9,7 +9,7 @@
  *
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
- 
+
 // for JSLint
 /*global TimeMap */
 
@@ -73,38 +73,42 @@ TimeMap.init({
  *                                                  as needed by the service
  * @param {mixed} [options[...]]                    Other options needed by the "type" loader
  */
-TimeMap.loaders.progressive = function(options) {
+TimeMap.loaders.progressive = function (options) {
     // get loader
-    var loader = options.loader, 
-        type = options.type;
-    if (!loader) {
-        // get loader class
-        var loaderClass = (typeof(type) == 'string') ? TimeMap.loaders[type] : type;
-        loader = new loaderClass(options);
-    }
-    
-    // save loader attributes
-    var baseUrl = loader.opts.url, 
-        baseLoadFunction = loader.load,
+    var loader = options.loader,
+        type = options.type,
+        loaderClass,
+        baseUrl,
+        baseLoadFunction,
         interval = options.interval,
         formatDate = options.formatDate || TimeMap.util.formatDate,
-        formatUrl = options.formatUrl || function(url, start, end) {
+        formatUrl = options.formatUrl || function (url, start, end) {
             return url
                 .replace('[start]', formatDate(start))
                 .replace('[end]', formatDate(end));
         },
         parseDate = TimeMap.dateParsers.hybrid,
-        zeroDate = parseDate(options.start), 
-        dataMinDate = parseDate(options.dataMinDate), 
+        zeroDate = parseDate(options.start),
+        dataMinDate = parseDate(options.dataMinDate),
         dataMaxDate = parseDate(options.dataMaxDate),
-        loaded = {};
+        loaded = {},
+        addListener;
+    if (!loader) {
+        // get loader class
+        loaderClass = (typeof type === 'string') ? TimeMap.loaders[type] : type;
+        loader = new loaderClass(options);
+    }
+
+    // save loader attributes
+    baseUrl = loader.opts.url;
+    baseLoadFunction = loader.load;
     
     // We don't start with a TimeMap reference, so we need
     // to stick the listener in on the first load() call
-    var addListener = function(dataset) {
+    addListener = function (dataset) {
         var band = dataset.timemap.timeline.getBand(0);
         // add listener
-        band.addOnScrollListener(function() {
+        band.addOnScrollListener(function () {
             // determine relevant blocks
             var now = band.getCenterVisibleDate(),
                 currBlock = Math.floor((now.getTime() - zeroDate.getTime()) / interval),
@@ -112,10 +116,10 @@ TimeMap.loaders.progressive = function(options) {
                 nextBlockTime = currBlockTime + interval,
                 prevBlockTime = currBlockTime - interval,
                 // no callback necessary?
-                callback = function() {
+                callback = function () {
                     dataset.timemap.timeline.layout();
                 };
-            
+
             // is the current block loaded?
             if ((!dataMaxDate || currBlockTime < dataMaxDate.getTime()) &&
                 (!dataMinDate || currBlockTime > dataMinDate.getTime()) &&
@@ -144,7 +148,7 @@ TimeMap.loaders.progressive = function(options) {
         // kill this function so that listener is only added once
         addListener = false;
     };
-    
+
     /**
      * Load data based on current time
      * @name TimeMap.loaders.progressive#load
@@ -154,24 +158,24 @@ TimeMap.loaders.progressive = function(options) {
      * @param {Date} start                  Start date to load data from
      * @param {Number} currBlock            Index of the current time block
      */
-    loader.load = function(dataset, callback, start, currBlock) {
+    loader.load = function (dataset, callback, start, currBlock) {
         // set start date, defaulting to zero date
         start = parseDate(start) || zeroDate;
         // set current block, defaulting to 0
         currBlock = currBlock || 0;
         // set end by interval
         var end = new Date(start.getTime() + interval);
-        
+
         // set current block as loaded
         // XXX: Failed loads will give a false positive here...
         // but I'm not sure how else to avoid multiple loads :(
         loaded[currBlock] = true;
-        
+
         // put dates into URL
         loader.opts.url = formatUrl(baseUrl, start, end);
-        
+
         // load data
-        baseLoadFunction.call(loader, dataset, function() {
+        baseLoadFunction.call(loader, dataset, function () {
             // add onscroll listener if not yet done
             if (addListener) {
                 addListener(dataset);
@@ -180,6 +184,6 @@ TimeMap.loaders.progressive = function(options) {
             callback();
         });
     };
-    
+
     return loader;
 };

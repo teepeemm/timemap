@@ -1,3 +1,8 @@
+
+/* global
+ TimeMap, $
+*/
+
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.
  * Licensed under the MIT License (see LICENSE.txt)
@@ -12,7 +17,7 @@
  */
 
 // save a few bytes
-(function() {
+(function () {
 
 /**
  * @name TimeMap.params
@@ -34,23 +39,23 @@ var params = TimeMap.params = {
      * @param {Function} [options.toStr]        Function to serialize the current value to a string
      * @param {Function} [options.setConfigXML] Function to parse the value from an XML node and set to config
      */
-    Param: function(paramName, options) {
+    Param: function (paramName, options) {
         var param = this;
         options = options || {};
-        
+
         /**
          * String name of this param
          * @name TimeMap.params.Param#paramName
          * @type String
          */
         param.paramName = paramName;
-        
+
         /**
          * String name of the source element, if different
          * @name TimeMap.params.Param#sourceName
          */
         param.sourceName = options.sourceName || paramName;
-    
+
         /**
          * Get the current state value from a TimeMap or TimeMapItem object
          * @name TimeMap.params.Param#get
@@ -60,7 +65,7 @@ var params = TimeMap.params = {
          * @return {mixed}                      Current state value
          */
         param.get = options.get;
-        
+
         /**
          * Set the current state value on a TimeMap or TimeMapItem object
          * @name TimeMap.params.Param#set
@@ -70,7 +75,7 @@ var params = TimeMap.params = {
          * @param {mixed} value                 Value to set
          */
         param.set = options.set;
-        
+
         /**
          * Set a new value on a config object for TimeMap.init()
          * @name TimeMap.params.Param#setConfig
@@ -80,11 +85,11 @@ var params = TimeMap.params = {
          * @param {Object} config   Config object to modify
          * @param {mixed} value     Value to set
          */
-        param.setConfig = options.setConfig || function(config, value) {
+        param.setConfig = options.setConfig || function (config, value) {
             // default: set at top level
             config[paramName] = value;
         };
-        
+
         /**
          * Parse a state value from a string
          * @name TimeMap.params.Param#fromString
@@ -93,11 +98,11 @@ var params = TimeMap.params = {
          * @param {String} s        String to parse
          * @return {mixed}          Current state value
          */
-        param.fromString = options.fromStr || function(s) {
+        param.fromString = options.fromStr || function (s) {
             // default: param is a string
             return s;
         };
-        
+
         /**
          * Serialize a state value as a string
          * @name TimeMap.params.Param#toString
@@ -106,11 +111,9 @@ var params = TimeMap.params = {
          * @param {mixed} value     Value to serialize
          * @return {String}         Serialized string
          */
-        param.toString = options.toStr || function(value) {
-            // default: use the built-in string method
-            return value.toString();
-        };
-        
+        param.toString = options.toStr || String.prototype.toString.bind(value);
+        // default: use the built-in string method
+
         /**
          * Get the current value as a string
          * @name TimeMap.params.Param#getString
@@ -118,10 +121,10 @@ var params = TimeMap.params = {
          * 
          * @param {TimeMap|TimeMapItem} o       Object to inspect
          */
-        param.getString = function(o) {
+        param.getString = function (o) {
             param.toString(param.get(o));
         };
-        
+
         /**
          * Set the current state value from a string
          * @name TimeMap.params.Param#setString
@@ -130,10 +133,10 @@ var params = TimeMap.params = {
          * @param {TimeMap|TimeMapItem} o       Object to modify
          * @param {String} s                    String version of value to set
          */
-        param.setString = function(o, s) {
+        param.setString = function (o, s) {
             param.set(o, param.fromString(s));
         };
-        
+
         /**
          * Set a config object based on an XML tag
          * @name TimeMap.params.Param#setConfigXML
@@ -142,10 +145,10 @@ var params = TimeMap.params = {
          * @param {Object} config       Config object to modify
          * @param {XMLElement} node   Parent node of the desired tag (or is the type XMLElement[] ? It had been XML NodeList.)
          */
-        param.setConfigXML = options.setConfigXML || function(config, node) {
+        param.setConfigXML = options.setConfigXML || function (config, node) {
             var tagName = param.sourceName,
-                nameParts = tagName.split(':'), 
-                ns; 
+                nameParts = tagName.split(':'),
+                ns;
             // deal with namespaced tags
             if (nameParts.length > 1) {
                 tagName = nameParts[1];
@@ -168,7 +171,7 @@ var params = TimeMap.params = {
      * @param {String} paramName        String name of the option parameter
      * @param {Object} [options]        Container for named arguments (see {@link TimeMap.params.Param})
      */
-    OptionParam: function(paramName, options) {
+    OptionParam: function (paramName, options) {
         options = options || {};
         var defaults = {
             
@@ -180,7 +183,7 @@ var params = TimeMap.params = {
              * @param {TimeMap|TimeMapItem} o       Object to inspect
              * @return {mixed}                      Current state value
              */
-            get: function(o) {
+            get: function (o) {
                 return o.opts[paramName];
             },
             
@@ -191,7 +194,7 @@ var params = TimeMap.params = {
              * @param {TimeMap|TimeMapItem} o       Object to modify
              * @param {mixed} value                 Value to set
              */
-            set: function(o, value) {
+            set: function (o, value) {
                 o.opts[paramName] = value;
             },
             
@@ -203,7 +206,7 @@ var params = TimeMap.params = {
              * @param {Object} config   Config object to modify
              * @param {mixed} value     Value to set
              */
-            setConfig: function(config, value) {
+            setConfig: function (config, value) {
                 config.options = config.options || {};
                 config.options[paramName] = value;
             }
@@ -253,7 +256,7 @@ TimeMap.loaders.base.prototype.params = {
      * @type TimeMap.params.Param
      */
     lat: new params.Param("lat", {
-        setConfig: function(config, value) {
+        setConfig: function (config, value) {
             config.point = config.point || {};
             config.point.lat = value;
         }
@@ -264,7 +267,7 @@ TimeMap.loaders.base.prototype.params = {
      * @type TimeMap.params.Param
      */
     lon: new params.Param("lon", {
-        setConfig: function(config, value) {
+        setConfig: function (config, value) {
             config.point = config.point || {};
             config.point.lon = value;
         }
