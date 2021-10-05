@@ -431,7 +431,7 @@ TimeMap.prototype = {
                 return item.dataset.visible;
             },
             // handler to open item window
-            eventClickHandler = function (ignore, ignore, evt) {
+            eventClickHandler = function (ignore, _ignore, evt) {
                 evt.item.openInfoWindow();
             },
             resizeTimerID, x, painter;
@@ -1596,7 +1596,7 @@ TimeMapTheme.create = function (theme, options) {
             clone = Object.keys(options).some( (key) => theme.hasOwnProperty(key) ) ? {} : false;
         // clone if necessary
         if (clone) {
-            Ojbect.entries(theme).forEach( function ([k,v]) {
+            Object.entries(theme).forEach( function ([k,v]) {
                 clone[k] = options[k] || v;
             });
             // fix event icon path, allowing full image path in options

@@ -6,6 +6,7 @@ const
         "basicLoad","jsonLoad","jsonpLoad","kmlLoad",
         "basicPlacemark","kmlPlacemark",
         "basicInfoWindow","customInfoWindow","multiInfoWindow",
+        "initOption","selection",
         "geoRSS","kml","missingElement","deletion",
         "visibility","timeParser","scrollTo",
         "iteration","theme"

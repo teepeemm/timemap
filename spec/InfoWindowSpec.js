@@ -1,33 +1,25 @@
 
-// namespace for info window tests
-const IWT = {};
+let tm, success
     
-IWT.setUpEventually = function (donecb) {
-    const timeoutLimit = 3000,
-        timeoutInterval = 100;
-    let elapsed = 0,
-        timeoutId;
-    function look(done) {
-        IWT.success = IWT.setupTest();
-        if ( IWT.success || elapsed > timeoutLimit ) {
-            setUpPageStatus = "complete";
-            done();
-        } else {
-            elapsed += timeoutInterval;
-            timeoutId = window.setTimeout(look, timeoutInterval, done);
-        }
+const timeoutInterval = 100,
+    maxAttempts = 30;
+
+function setUpComplete(done,attempts) {
+    success = setupTest();
+    if ( success || maxAttempts < attempts ) {
+        setUpPageStatus = "complete";
+        done();
+    } else {
+        setTimeout(setUpComplete, timeoutInterval, done, attempts+1);
     }
-    look(donecb);
 }
 
 function setUpPage(done) {
-    IWT.tm = TimeMap.init({
+    tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required) 
-        datasets: [ 
-            IWT.dataset
-        ]
+        datasets: [ dataset ]
     });
-    IWT.setup();
-    IWT.setUpEventually(done);
+    setup();
+    setUpComplete(done);
 }

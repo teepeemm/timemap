@@ -111,8 +111,10 @@ var params = TimeMap.params = {
          * @param {mixed} value     Value to serialize
          * @return {String}         Serialized string
          */
-        param.toString = options.toStr || String.prototype.toString.bind(value);
-        // default: use the built-in string method
+        param.toString = options.toStr || function (value) {
+            // default: use the built-in string method
+            return value.toString();
+        };
 
         /**
          * Get the current value as a string

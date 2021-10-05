@@ -11,7 +11,7 @@ help:
 
 .PHONY: help doc lint build-tests
 
-bin: timemap-full-pack.js timemap-pack.js
+bin: timemap-full.pack.js timemap-pack.js
 
 docs:
 	jsdoc --destination docs --recurse src

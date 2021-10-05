@@ -46,13 +46,17 @@ TimeMap.loaders.xml = function (options) {
         loader.callbackName = loader.getCallbackName(dataset, callback);
         // set the callback function
         // see https://docs.jquery.com/Specifying_the_Data_Type_for_AJAX_Requests
-        loader.opts.dataType =  $.browser.msie ? "text" : "xml";
+        loader.opts.dataType =  "xml"; //$.browser.msie ? "text" : "xml";
         loader.opts.success = function (data) {
             var xml;
             if (typeof data === "string") {
-                xml = new ActiveXObject("Microsoft.XMLDOM");
-                xml.async = false;
-                xml.loadXML(data);
+//                xml = new ActiveXObject("Microsoft.XMLDOM");
+//                xml = new XMLHttpRequest();
+//                xml.async = false;
+//                xml.loadXML(data);
+//                const parser = new DOMParser(),
+//                    xml = parser.parseFromString(data, "text/xml");;
+                xml = $.parseXML(data);
             } else {
                 xml = data;
             }

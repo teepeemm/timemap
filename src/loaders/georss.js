@@ -94,7 +94,8 @@ TimeMap.loaders.georss.parse = function (node) {
     nsMap.geo = 'http://www.w3.org/2003/01/geo/wgs84_pos#';
     nsMap.kml = 'http://www.opengis.net/kml/2.2';
 
-    placemarks.forEach( function (pm) {
+    for (let i=0; i<placemarks.length; i++) {
+        pm = placemarks[i];
         data = { options: {} };
         // get title & description
         data.title = getTagValue(pm, "title");
@@ -202,7 +203,7 @@ TimeMap.loaders.georss.parse = function (node) {
         // look for any extra tags specified
         this.parseExtra(data, pm);
         items.push(data);
-    });
+    }
 
     // clean up
     node = null;

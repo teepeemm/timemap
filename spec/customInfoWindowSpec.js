@@ -1,7 +1,7 @@
 
 jasmine.getEnv().configure({ random: false });
 
-IWT.dataset = {
+const dataset = {
     id: "test",
     type: "basic",
     options: {
@@ -54,11 +54,11 @@ IWT.dataset = {
     }
 };
 
-IWT.setup = function() {
-    IWT.tm.datasets['test'].getItems()[0].openInfoWindow();
+function setup() {
+    tm.datasets['test'].getItems()[0].openInfoWindow();
 }
 
-IWT.setupTest = function() {
+function setupTest() {
     // this is effectively the assertion
     return $('span#custom').length == 1
 }
@@ -66,7 +66,7 @@ IWT.setupTest = function() {
 describe("info template", () => {
     beforeAll(setUpPage);
     it("should find the template info window", () => {
-        expect( IWT.success ).toBeTruthy();
+        expect( success ).toBeTrue();
     });
     it("should have the correct content", () => {
         expect( $('span#custom').text() )
@@ -76,10 +76,10 @@ describe("info template", () => {
 
 describe("close on hide", () => {
     beforeAll( () => {
-        IWT.tm.datasets['test'].getItems()[0].hidePlacemark();
+        tm.datasets['test'].getItems()[0].hidePlacemark();
     });
     it("should remove the window", () => {
-        if (IWT.tm.map.api == 'microsoft') {
+        if ( tm.map.api === 'microsoft' ) {
             expect( $('span#custom').css('visibility') ).toBe("hidden");
         } else {
             expect( $('span#custom').length ).toBe(0);
@@ -89,14 +89,14 @@ describe("close on hide", () => {
 
 describe("custom open", () => {
     beforeAll( () => {
-        IWT.tm.datasets['test'].getItems()[1].openInfoWindow();
+        tm.datasets['test'].getItems()[1].openInfoWindow();
     });
     it("should open the window", () => {
         expect( $('div#custom2').length ).toBe(1);
     });
     describe("closing", () => {
         beforeAll( () => {
-            IWT.tm.datasets['test'].getItems()[1].closeInfoWindow();
+            tm.datasets['test'].getItems()[1].closeInfoWindow();
         });
         it("should close the window", () => {
             expect( $('div#custom2').length ).toBe(0);
@@ -106,22 +106,18 @@ describe("custom open", () => {
 
 describe("custom info html", () => {
     beforeAll( () => {
-        IWT.tm.datasets['test'].getItems()[2].openInfoWindow();
+        tm.datasets['test'].getItems()[2].openInfoWindow();
     });
-    it("should open the window", () => {
+    it("should have opened the window", () => {
         expect( $('div#custom3').length ).toBe(1);
-    });
-    it("should have the correct title", () => {
         expect( $('div#custom3 div.infotitle').text() )
-            .toBe( IWT.dataset.options.items[2].title );
-    });
-    it("should have the correct description", () => {
+            .toBe( dataset.options.items[2].title );
         expect( $('div#custom3 div.infodescription').text() )
-            .toBe( IWT.dataset.options.items[2].options.description );
+            .toBe( dataset.options.items[2].options.description );
     });
     describe("closing", () => {
         beforeAll( () => {
-            IWT.tm.datasets['test'].getItems()[2].closeInfoWindow();
+            tm.datasets['test'].getItems()[2].closeInfoWindow();
         });
         it("should close the window", () => {
             expect( $('div#custom3').length ).toBe(0);
