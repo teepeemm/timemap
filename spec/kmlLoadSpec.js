@@ -10,8 +10,7 @@ function setUpPage() {
                 type: "kml",
                 options: { url: "data/data.kml" }
             }
-        ],
-        dataDisplayedFunction: function() { setUpPageStatus = "complete"; }
+        ]
     });
 }
 

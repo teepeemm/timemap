@@ -1,6 +1,4 @@
 
-jasmine.getEnv().configure({ random: false });
-
 const parser = Timeline.DateTime.parseIso8601DateTime;
 
 let tm, ds, item, placemark, eventSource;
@@ -12,12 +10,14 @@ function expectItemVisible(flag) {
 }
 
 function expectPlacemarkVisible(flag) {
+    expect( placemark ).toBeDefined();
     expect( placemark.isHidden() ).toBe(!flag);
     expect( item.placemarkVisible ).toBe(flag);
 }
 
 // no great way to test item visibility
 function expectEventVisible(flag) {
+    expect( item.event ).toBeDefined();
     expect( eventSource.getCount() ).toBe(flag?1:0);
     expect( item.eventVisible ).toBe(flag);
 }
@@ -28,116 +28,62 @@ function expectDatasetVisible(flag) {
     expectEventVisible(flag);
 }
 
+function expectAllVisible(flag) {
+    expectItemVisible(flag);
+    expectPlacemarkVisible(flag);
+    expectEventVisible(flag);
+    expectDatasetVisible(flag);
+}
+
 describe("visibility", () => {
     beforeAll(setUp);
-    it("has the right visibility for items", () => {
-        expect( placemark ).toBeDefined();
-        expect( item.event ).toBeDefined();
-        expectItemVisible(true);
+    beforeEach( () => {
+        expectAllVisible(true);
     });
-    describe("hiding an item", () => {
-        beforeAll( () => { item.hide(); } );
-        afterAll( () => { item.show(); } );
-        it("can hide items", () => {
-            expectItemVisible(false);
-        });
+    afterEach( () => {
+        expectAllVisible(true);
     });
-    it("still has the right visibility for items", () => {
-        expectItemVisible(true);
+    it("can hide items", () => {
+        item.hide();
+        expectItemVisible(false);
+        item.show();
     });
-    it("has the right visibility for placemarks", () => {
-        expectPlacemarkVisible(true);
+    it("can hide placemarks", () => {
+        item.hidePlacemark();
+        expectPlacemarkVisible(false);
+        item.showPlacemark();
     });
-    describe("hiding a placemark", () => {
-        beforeAll( () => { item.hidePlacemark(); } );
-        afterAll( () => { item.showPlacemark(); } );
-        it("can hide placemarks", () => {
-            expectPlacemarkVisible(false);
-        });
+    it("can hide events", () => {
+        item.hideEvent();
+        expectEventVisible(false);
+        item.showEvent();
     });
-    it("still has the right visibility for placemarks", () => {
-        expectPlacemarkVisible(true);
+    it("can hide a dataset", () => {
+        ds.hide();
+        expectDatasetVisible(false);
+        ds.show();
     });
-    it("has the right visibility for events", () => {
-        expectEventVisible(true);
+    it("can hide all datasets", () => {
+        tm.hideDatasets();
+        expectDatasetVisible(false);
+        tm.showDatasets();
     });
-    describe("hiding an event", () => {
-        beforeAll( () => { item.hideEvent(); } );
-        afterAll( () => { item.showEvent(); } );
-        it("can hide events", () => {
-            expectEventVisible(false);
-        });
+    it("can hide a dataset by id", () => {
+        tm.hideDataset("test");
+        expectDatasetVisible(false);
+        tm.showDatasets();
+        tm.hideDataset("notarealid");
     });
-    it("still has the right visibility for events", () => {
-        expectEventVisible(true);
+    it("can hide the past", () => {
+        tm.timeline.getBand(0).setCenterVisibleDate(parser("2000-01-01"));
+        expect( placemark.isHidden() ).toBeTrue();
+        tm.timeline.getBand(0).setCenterVisibleDate(parser("1980-01-01"));
     });
-    it("has the right visibility for datasets", () => {
-        expectDatasetVisible(true);
+    it("can hide the future", () => {
+        tm.timeline.getBand(0).setCenterVisibleDate(parser("1970-01-01"));
+        expect( placemark.isHidden() ).toBeTrue();
+        tm.timeline.getBand(0).setCenterVisibleDate(parser("1980-01-01"));
     });
-    describe("hiding a dataset", () => {
-        beforeAll( () => { ds.hide(); } );
-        afterAll( () => { ds.show(); } );
-        it("can hide a dataset", () => {
-            expectDatasetVisible(false);
-        });
-    });
-    it("still has the right visibility for datasets", () => {
-        expectDatasetVisible(true);
-    });
-    it("has the right global visibility", () => {
-        expectDatasetVisible(true);
-    });
-    describe("TimeMap.hideDatasets()", () => {
-        beforeAll( () => { tm.hideDatasets(); } );
-        afterAll( () => { tm.showDatasets(); } );
-        it("can hide all datasets", () => {
-            expectDatasetVisible(false);
-        });
-    });
-    it("still has the right global visibility", () => {
-        expectDatasetVisible(true);
-    });
-    describe("TimeMap.hideDataset(id)", () => {
-        beforeAll( () => { tm.hideDataset("test"); } );
-        afterAll( () => {
-            tm.showDatasets();
-            tm.hideDataset("notarealid");
-        });
-        it("has hidden the dataset by id", () => {
-            expectDatasetVisible(false);
-        });
-    });
-    it("still has the expected visibility", () => {
-        expectDatasetVisible(true);
-    });
-    describe("hiding the past", () => {
-        beforeAll( () => {
-            tm.timeline.getBand(0).setCenterVisibleDate(parser("2000-01-01"));
-        });
-        afterAll( () => {
-            tm.timeline.getBand(0).setCenterVisibleDate(parser("1980-01-01"));
-        });
-        it("has hidden the past", () => {
-            expect( placemark.isHidden() ).toBeTrue();
-        });
-    });
-    it("has the expected visibility", () => {
-        expect( placemark.isHidden() ).toBeFalse();
-    });
-    describe("hiding the future", () => {
-        beforeAll( () => {
-            tm.timeline.getBand(0).setCenterVisibleDate(parser("1970-01-01"));
-        });
-        afterAll( () => {
-            tm.timeline.getBand(0).setCenterVisibleDate(parser("1980-01-01"));
-        });
-        it("has hidden the future", () => {
-            expect( placemark.isHidden() ).toBeTrue();
-        });
-    });
-    it("has the expected visibility", () => {
-        expect( placemark.isHidden() ).toBeFalse();
-    })
 });
 
 function setUpPage() {
@@ -166,7 +112,6 @@ function setUpPage() {
             }
         ]
     });
-    setUpPageStatus = "complete";
 }
 
 function setUp() {

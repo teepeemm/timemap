@@ -1,62 +1,64 @@
 
+// this can't be random because we slowly delete items and
+// need to count how many are left
 jasmine.getEnv().configure({ random: false });
 
-const
+const datasetA = {
+        title: "Test Dataset A",
+        id: "testA",
+        type: "basic",
+        options: {
+            items: [
+                {
+                    "start" : "1980-01-02",
+                    "end" : "1990-01-02",
+                    "point" : {
+                        "lat" : 23.456,
+                        "lon" : 12.345
+                    },
+                    "title" : "Test Event A1"
+                }, {
+                    "start" : "1980-01-02",
+                    "end" : "1990-01-02",
+                    "point" : {
+                        "lat" : 23.456,
+                        "lon" : 12.345
+                    },
+                    "title" : "Test Event A2"
+                }
+            ]
+        }
+    },
+    datasetB = {
+        title: "Test Dataset B",
+        id: "testB",
+        type: "basic",
+        options: {
+            items: [
+                {
+                    "start" : "1980-01-02",
+                    "end" : "1990-01-02",
+                    "point" : {
+                        "lat" : 23.456,
+                        "lon" : 12.345
+                    },
+                    "title" : "Test Event B1"
+                }, {
+                    "start" : "1980-01-02",
+                    "end" : "1990-01-02",
+                    "point" : {
+                        "lat" : 23.456,
+                        "lon" : 12.345
+                    },
+                    "title" : "Test Event B2"
+                }
+            ]
+        }
+    },
     tmOptions = {
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required)
-        datasets: [
-            {
-                title: "Test Dataset A",
-                id: "testA",
-                type: "basic",
-                options: {
-                    items: [
-                        {
-                            "start" : "1980-01-02",
-                            "end" : "1990-01-02",
-                            "point" : {
-                                "lat" : 23.456,
-                                "lon" : 12.345
-                            },
-                            "title" : "Test Event A1"
-                        }, {
-                            "start" : "1980-01-02",
-                            "end" : "1990-01-02",
-                            "point" : {
-                                "lat" : 23.456,
-                                "lon" : 12.345
-                            },
-                            "title" : "Test Event A2"
-                        }
-                    ]
-                }
-            }, {
-                title: "Test Dataset B",
-                id: "testB",
-                type: "basic",
-                options: {
-                    items: [
-                        {
-                            "start" : "1980-01-02",
-                            "end" : "1990-01-02",
-                            "point" : {
-                                "lat" : 23.456,
-                                "lon" : 12.345
-                            },
-                            "title" : "Test Event B1"
-                        }, {
-                            "start" : "1980-01-02",
-                            "end" : "1990-01-02",
-                            "point" : {
-                                "lat" : 23.456,
-                                "lon" : 12.345
-                            },
-                            "title" : "Test Event B2"
-                        }
-                    ]
-                }
-            }, {
+        datasets: [ datasetA, datasetB, {
                 title: "Test Dataset C",
                 id: "testC",
                 type: "basic",
@@ -89,10 +91,8 @@ describe("deletion", () => {
             .toBe(orgNumItems);
     });
     describe("delete an item", () => {
-        beforeAll( () => {
-            ds.deleteItem(item);
-        });
         it("still has the right number of items", () => {
+            ds.deleteItem(item);
             expect( ds.getItems().length )
                 .toBe(tmOptions.datasets
                       .find( (ds) => ds.id==="testA" )
@@ -102,10 +102,8 @@ describe("deletion", () => {
         });
     });
     describe("delete a dataset", () => {
-        beforeAll( () => {
-            tm.deleteDataset("testC");
-        });
         it("has deleted the dataset", () => {
+            tm.deleteDataset("testC");
             expect( tm.datasets["testC"] ).toBeUndefined();
         });
     });
@@ -121,15 +119,10 @@ describe("clearing", () => {
                   .options.items.length);
     });
     describe("clear an item", () => {
-        beforeAll( () => {
-            item = ds.getItems()[0];
-            item.clear();
-        });
-        it("no longer has the item", () => {
+        it("no longer has the item, but does have events", () => {
+            ds.getItems()[0].clear();
             expect( item.placemark ).toBeNull();
             expect( item.event ).toBeNull();
-        });
-        it("still has the right number of events", () => {
             expect( tm.timeline.getBand(0).getEventSource().getCount() )
                 .toBe( tmOptions.datasets
                        .map( (ds) => ds.options.items.length )
@@ -137,10 +130,8 @@ describe("clearing", () => {
         });
     });
     describe("clear the dataset", () => {
-        beforeAll( () => {
-            ds.clear();
-        });
         it("has no items but one event", () => {
+            ds.clear();
             expect( ds.getItems().length ).toBe(0);
             expect( tm.timeline.getBand(0).getEventSource().getCount() )
                 .toBe( tmOptions.datasets
@@ -150,10 +141,8 @@ describe("clearing", () => {
         });
     });
     describe("clear the timeline", () => {
-        beforeAll( () => {
-            tm.clear();
-        });
         it("has been emptied", () => {
+            tm.clear();
             expect( tm.datasets["testA"] ).toBeUndefined();
             expect( tm.datasets["testB"] ).toBeUndefined();
             expect( tm.timeline.getBand(0).getEventSource().getCount() )

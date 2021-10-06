@@ -1,27 +1,26 @@
 
-jasmine.getEnv().configure({ random: false });
-
 let tm, tm2, tm3;
+
+const items = [
+    {
+        "start" : "1452",
+        "point" : {
+            "lat" : 40.0,
+            "lon" : 12.0
+        },
+        "title" : "Item 1"
+    },{
+        "start" : "1475",
+        "point" : {
+            "lat" : 42.0,
+            "lon" : 12.0
+        },
+        "title" : "Item 2"
+    }
+];
+
 // page setup script
 function setUpPage() {
-    const items = [
-        {
-            "start" : "1452",
-            "point" : {
-                "lat" : 40.0,
-                "lon" : 12.0
-            },
-            "title" : "Item 1"
-        },{
-            "start" : "1475",
-            "point" : {
-                "lat" : 42.0,
-                "lon" : 12.0
-            },
-            "title" : "Item 2"
-        }
-    ];
-    // tm
     tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required)
@@ -33,7 +32,6 @@ function setUpPage() {
             }
         ]
     });
-    // tm 2
     tm2 = TimeMap.init({
         mapId: "map2",               // Id of map div element (required)
         timelineId: "timeline2",     // Id of timeline div element (required)
@@ -53,7 +51,6 @@ function setUpPage() {
             }
         ]
     });
-    // tm 3
     tm3 = TimeMap.init({
         mapId: "map3",               // Id of map div element (required)
         timelineId: "timeline3",     // Id of timeline div element (required)
@@ -89,7 +86,6 @@ function setUpPage() {
             }
         ]
     });
-    // tm4
     tm4 = TimeMap.init({
         mapId: "map4",               // Id of map div element (required)
         timelineId: "timeline4",     // Id of timeline div element (required)
@@ -126,23 +122,25 @@ function setUpPage() {
             }
         ]
     });
-    setUpPageStatus = "complete";
 }
 
-// custom expectations
 function expectBandInterval(timemap, bandIndex, interval) {
     expect(timemap.timeline.getBand(bandIndex).getEther()._interval)
         .toBe(Timeline.DateTime.gregorianUnitLengths[Timeline.DateTime[interval]]);
 }
 
 function expectMapType(timemap, type) {
-    if ( tm.map.api !== 'openlayers' ) {
-        expect(mxn.Mapstraction[type]).toBe(timemap.map.getMapType());
-    } // else pass - OpenLayers doesn't support other map types in Mapstraction
+    expect(mxn.Mapstraction[type]).toBe(timemap.map.getMapType());
 }
 
-describe("default map type", () => {
+describe("initOptions", () => {
     beforeAll(setUpPage);
+    describe("default map type", defaultMapType);
+    describe("center and zoom", centerAndZoom);
+    describe("timeline bands", timelineBands);
+});
+
+function defaultMapType() {
     it("has the correct map type", () => {
         switch (tm.map.api) {
             case "google":
@@ -150,6 +148,8 @@ describe("default map type", () => {
                 expectMapType(tm, 'PHYSICAL');
                 break;
             case "openlayers":
+                // OpenLayers doesn't support other map types in Mapstraction
+                break;
             case "microsoft":
                 expectMapType(tm, 'ROAD');
                 break;
@@ -159,11 +159,13 @@ describe("default map type", () => {
     });
     it("has the correct custom map type", () => {
         // this will fail for openlayers right now
-        expectMapType(tm2, 'SATELLITE');
+        if ( tm2.map.api !== 'openlayers' ) {
+            expectMapType(tm2, 'SATELLITE');
+        }
     });
-});
+}
 
-describe("center and zoom", () => {
+function centerAndZoom() {
     it("has the correct auto center and zoom", () => {
         const mapZoom = tm.map.getZoom(),
             center = tm.map.getCenter();
@@ -186,9 +188,9 @@ describe("center and zoom", () => {
         expect( center3.lat ).toBeCloseTo(38,1);
         expect( center3.lon ).toBeCloseTo(-123,1);
     });
-});
+}
 
-describe("timeline bands", () => {
+function timelineBands() {
     it("has the correct default bands", () => {
         expect( tm.timeline.getBandCount() ).toBe(2);
         expect( tm.timeline.getBand(1)._syncWithBand )
@@ -223,4 +225,4 @@ describe("timeline bands", () => {
             .toBe(Timeline.HotZoneEther);
         expect( tm4.timeline.getBand(0).getEventSource) .toBe(tm4.timeline.getBand(1).getEventSource);
     });
-});
+}

@@ -1,6 +1,5 @@
 
 function setUpPage() {
-    spyOn($,'ajax').and.callFake(dataloader);
     tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required)
@@ -11,8 +10,7 @@ function setUpPage() {
                 type: "json_string",
                 options: { url: "data/data_string.js" }
             }
-        ],
-        dataDisplayedFunction: function() { setUpPageStatus = "complete"; }
+        ]
     });
 }
 

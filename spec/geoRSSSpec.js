@@ -1,6 +1,4 @@
 
-jasmine.getEnv().configure({ random: false });
-
 let tm;
 
 const tmOptions = {
@@ -33,177 +31,154 @@ const tmOptions = {
         ]
     }
 
-function setUpPage(donecb) {
+function setUpPage() {
     TimeMap.util.nsMap['dc'] = 'http://purl.org/dc/elements/1.1/';
     tm = TimeMap.init(tmOptions);
-    readyTest(donecb,0);
 }
 
-function readyTest(done,attempts) {
-    if ( tm && tm.datasets ) {
-        console.log('done');
-        done();
-    } else if (attempts>30) {
-        throw 'timemap not loaded';
-    } else {
-        setTimeout(readyTest,100,done,attempts+1);
-    }
-}
-
-describe("datasets are defined", () => {
-    beforeAll( (done) => {
+describe("geoRSS", () => {
+    beforeAll( () => {
         spyOn($,'ajax').and.callFake(dataloader);
-        setUpPage(done);
+        setUpPage();
     });
+    describe("datasets are defined", datasetsDefined);
+    describe("rss loading", rssloading);
+    describe("atom loading", atomloading);
+    describe("mixed loading", mixedloading);
+    describe("mixed KML time", mixedKMLtime);
+    describe("mixed extra tags", mixedExtraTags);
+});
+
+function datasetsDefined() {
     it("has defined the datasets", () => {
         expect( $.ajax ).toHaveBeenCalledTimes(3);
-//        expect( $.ajax ).toHaveBeenCalledWith({
-//            url: "../tests/data/data.rss",
-//            type: "GET",
-//            dataType: "xml",
-//            success: Function
-//        });
         expect( tm ).toBeDefined();
         expect( tm.datasets ).toBeDefined();
         expect( tm.datasets["rss"] ).toBeDefined();
         expect( tm.datasets["atom"] ).toBeDefined();
         expect( tm.datasets["mixed"] ).toBeDefined();
     });
-});
+}
 
-describe("rss loading", () => {
+function rssloading() {
     it("has loaded the rss dataset", () => {
         expect( tm.datasets["rss"].getItems().length ).toBe(1);
     });
-    describe("earliest date", () => {
-        it("has the correct earliest date", () => {
-            expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCFullYear() )
-                .toBe(1980);
-            expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCMonth() )
-                .toBe(0);
-            // Timeline seems to adjust for the timezone after parsing :(
-            expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCDate() )
-                .toBe(2);
-        });
+    it("has the correct earliest date", () => {
+        expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCFullYear() )
+            .toBe(1980);
+        expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCMonth() )
+            .toBe(0);
+        // Timeline seems to adjust for the timezone after parsing :(
+        expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCDate() )
+            .toBe(2);
     });
-    describe("item attributes", () => {
-        it("has the right item", () => {
-            const item = tm.datasets["rss"].getItems()[0],
-                point = new mxn.LatLonPoint(23.456, 12.345);
-            expect( item.getTitle() ).toBe("Test Event");
-            expect( item.getType() ).toBe("marker");
-            expect( item.getInfoPoint().equals(point) ).toBeTrue();
-        });
+    it("has the right item", () => {
+        const item = tm.datasets["rss"].getItems()[0],
+            point = new mxn.LatLonPoint(23.456, 12.345);
+        expect( item.getTitle() ).toBe("Test Event");
+        expect( item.getType() ).toBe("marker");
+        expect( item.getInfoPoint().equals(point) ).toBeTrue();
     });
-});
+}
 
-describe("atom loading", () => {
+function atomloading() {
     it("has loaded the atom dataset", () => {
         expect( tm.datasets["atom"].getItems().length ).toBe(1);
     });
-    describe("earliest date", () => {
-        it("has the correct earliest date", () => {
-            expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCFullYear() )
-                .toBe(1980);
-            expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCMonth() )
-                .toBe(0);
-            // Timeline seems to adjust for the timezone after parsing :(
-            expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCDate() )
-                .toBe(2);
-        });
+    it("has the correct earliest date", () => {
+        expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCFullYear() )
+            .toBe(1980);
+        expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCMonth() )
+            .toBe(0);
+        // Timeline seems to adjust for the timezone after parsing :(
+        expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCDate() )
+            .toBe(2);
     });
-    describe("item attributes", () => {
-        it("has the right item", () => {
-            const item = tm.datasets["atom"].getItems()[0],
-                point = new mxn.LatLonPoint(23.456, 12.345);
-            expect( item.getTitle() ).toBe("Test Event");
+    it("has the right item", () => {
+        const item = tm.datasets["atom"].getItems()[0],
+            point = new mxn.LatLonPoint(23.456, 12.345);
+        expect( item.getTitle() ).toBe("Test Event");
+        expect( item.getType() ).toBe("marker");
+        expect( item.getInfoPoint().equals(point) ).toBeTrue();
+    });
+}
+
+function mixedloading() {
+    it("has loaded the mixed dataset", () => {
+        expect( tm.datasets["mixed"].getItems().length ).toBe(14);
+    });
+    it("has the right placemarks", () => {
+        const point = new mxn.LatLonPoint(23.456, 12.345);
+        tm.datasets["mixed"].getItems().slice(0,4).forEach( (item) => {
             expect( item.getType() ).toBe("marker");
             expect( item.getInfoPoint().equals(point) ).toBeTrue();
         });
     });
-});
-
-describe("mixed loading", () => {
-    it("has loaded the mixed dataset", () => {
-        expect( tm.datasets["mixed"].getItems().length ).toBe(14);
-    });
-    describe("placemarks", () => {
-        it("has the right placemarks", () => {
-            const point = new mxn.LatLonPoint(23.456, 12.345);
-            tm.datasets["mixed"].getItems().slice(0,4).forEach( (item) => {
-                expect( item.getType() ).toBe("marker");
-                expect( item.getInfoPoint().equals(point) ).toBeTrue();
-            });
-        });
-        it("has the right polylines", () => {
-            const points = [
-                new mxn.LatLonPoint(45.256, -110.45),
-                new mxn.LatLonPoint(46.46, -109.48),
-                new mxn.LatLonPoint(43.84, -109.86)
-            ];
-            tm.datasets["mixed"].getItems().slice(4,6).forEach( (item) => {
-                expect( item.getType() ).toBe("polyline");
-                expect( TimeMap.util.getPlacemarkType(item.placemark) )
-                    .toBe("polyline");
-                expect( item.placemark.points ).toBeDefined();
-                expect( item.placemark.points.length ).toBe(3);
-                expect( item.getInfoPoint().equals(points[1]) ).toBeTrue();
-                points.forEach( (point,index) => {
-                    expect( item.placemark.points[index].equals(point) ).toBeTrue();
-                });
-            });
-        });
-        it("has the right polygons", () => {
-            const points = [
-                new mxn.LatLonPoint(45.256, -110.45),
-                new mxn.LatLonPoint(46.46, -109.48),
-                new mxn.LatLonPoint(43.84, -109.86)
-            ],
-            centerPoint = new mxn.LatLonPoint(45.150000000000006, -109.965);
-            tm.datasets["mixed"].getItems().slice(6,8).forEach( (item) => {
-                expect( item.getType() ).toBe("polygon");
-                expect( TimeMap.util.getPlacemarkType(item.placemark) )
-                    .toBe("polygon");
-                // Google seems to count the last vertex of a closed polygon
-                expect( item.placemark.points ).toBeDefined();
-                expect( item.placemark.points.length ).toBe(4);
-                expect( item.getInfoPoint().equals(centerPoint) ).toBeTrue();
-                points.forEach( (point,index) => {
-                    expect( item.placemark.points[index].equals(point) ).toBeTrue();
-                });
+    it("has the right polylines", () => {
+        const points = [
+            new mxn.LatLonPoint(45.256, -110.45),
+            new mxn.LatLonPoint(46.46, -109.48),
+            new mxn.LatLonPoint(43.84, -109.86)
+        ];
+        tm.datasets["mixed"].getItems().slice(4,6).forEach( (item) => {
+            expect( item.getType() ).toBe("polyline");
+            expect( TimeMap.util.getPlacemarkType(item.placemark) )
+                .toBe("polyline");
+            expect( item.placemark.points ).toBeDefined();
+            expect( item.placemark.points.length ).toBe(3);
+            expect( item.getInfoPoint().equals(points[1]) ).toBeTrue();
+            points.forEach( (point,index) => {
+                expect( item.placemark.points[index].equals(point) ).toBeTrue();
             });
         });
     });
-});
+    it("has the right polygons", () => {
+        const points = [
+            new mxn.LatLonPoint(45.256, -110.45),
+            new mxn.LatLonPoint(46.46, -109.48),
+            new mxn.LatLonPoint(43.84, -109.86)
+        ],
+        centerPoint = new mxn.LatLonPoint(45.150000000000006, -109.965);
+        tm.datasets["mixed"].getItems().slice(6,8).forEach( (item) => {
+            expect( item.getType() ).toBe("polygon");
+            expect( TimeMap.util.getPlacemarkType(item.placemark) )
+                .toBe("polygon");
+            // Google seems to count the last vertex of a closed polygon
+            expect( item.placemark.points ).toBeDefined();
+            expect( item.placemark.points.length ).toBe(4);
+            expect( item.getInfoPoint().equals(centerPoint) ).toBeTrue();
+            points.forEach( (point,index) => {
+                expect( item.placemark.points[index].equals(point) ).toBeTrue();
+            });
+        });
+    });
+}
 
-describe("mixed KML time", () => {
+function mixedKMLtime() {
     it("has the right start", () => {
         const d = tm.datasets["mixed"].getItems()[8].event.getStart();
         expect( d.getUTCFullYear() ).toBe(1985);
         expect( d.getUTCMonth() ).toBe(0);
         expect( d.getUTCDate() ).toBe(2);
     });
-    describe("end date", () => {
-        it("has the right end", () => {
-            const d = tm.datasets["mixed"].getItems()[8].event.getEnd();
-            expect( d.getUTCFullYear() ).toBe(2000);
-            expect( d.getUTCMonth() ).toBe(0);
-            expect( d.getUTCDate() ).toBe(2);
-        });
+    it("has the right end", () => {
+        const d = tm.datasets["mixed"].getItems()[8].event.getEnd();
+        expect( d.getUTCFullYear() ).toBe(2000);
+        expect( d.getUTCMonth() ).toBe(0);
+        expect( d.getUTCDate() ).toBe(2);
     });
-    describe("instant date", () => {
-        it("has the right instant date", () => {
-            const item = tm.datasets["mixed"].getItems()[9],
-                d = item.event.getStart();
-            expect( d.getUTCFullYear() ).toBe(1985);
-            expect( d.getUTCMonth() ).toBe(0);
-            expect( d.getUTCDate() ).toBe(2);
-            expect( item.event.isInstant() ).toBeTrue();
-        });
+    it("has the right instant date", () => {
+        const item = tm.datasets["mixed"].getItems()[9],
+            d = item.event.getStart();
+        expect( d.getUTCFullYear() ).toBe(1985);
+        expect( d.getUTCMonth() ).toBe(0);
+        expect( d.getUTCDate() ).toBe(2);
+        expect( item.event.isInstant() ).toBeTrue();
     });
-});
+}
 
-describe("mixed extra tags", () => {
+function mixedExtraTags() {
     it("has read the extra tags", () => {
         const items = tm.datasets["mixed"].getItems();
         expect( items[10].opts.link ).toBe( "http://www.example.com/" );
@@ -211,20 +186,16 @@ describe("mixed extra tags", () => {
         expect( items[12].opts.email ).toBe( "nick@example.com" );
         expect( items[13].opts.issuer ).toBe( "Nick" );
     });
-});
+}
 
 function dataloader(args) {
-    console.log("loading from: "+args.url);
     if ( args.url.indexOf('data/data.rss') >= 0 ) {
-        console.log('branch1');
         args.success($.parseXML(`<rss version="2.0" xmlns:georss="http://www.georss.org/georss">
 <channel><title>Test</title><item><title>Test Event</title><description>Test Description</description><pubDate>02 Jan 1980 00:00:00 +0000</pubDate><georss:point>23.456 12.345</georss:point></item></channel></rss>`));
     } else if ( args.url.indexOf('data/data-atom.xml') >= 0 ) {
-        console.log('branch2');
         args.success($.parseXML(`<feed xmlns="http://www.w3.org/2005/Atom" xmlns:georss="http://www.georss.org/georss"><title>Test</title><entry><title>Test Event</title><updated>1980-01-02</updated><summary type="html">Test Description</summary><georss:point>23.456 12.345</georss:point></entry>
 </feed>`));
     } else if ( args.url.indexOf('data/data-mixed.xml') >= 0 ) {
-        console.log('branch3');
         args.success($.parseXML(`<rss version="2.0"
     xmlns:georss="http://www.georss.org/georss"
     xmlns:gml="http://www.opengis.net/gml"

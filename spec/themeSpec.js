@@ -1,6 +1,4 @@
 
-jasmine.getEnv().configure({ random: false });
-
 let tm;
 
 const customIcon = "fakeimg.png",
@@ -114,7 +112,6 @@ function setUpPage() {
             }
         ]
     });
-    setUpPageStatus = "complete";
 }
 
 function setUp() {

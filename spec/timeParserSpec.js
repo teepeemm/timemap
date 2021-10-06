@@ -189,5 +189,4 @@ function setUpPage() {
             }
         ]
     });
-    setUpPageStatus = "complete";
 }

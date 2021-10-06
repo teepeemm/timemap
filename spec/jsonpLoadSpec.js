@@ -9,8 +9,7 @@ function setUpPage() {
                 type: "jsonp",
                 options: { url: "data/data.js?cb=" }
             }
-        ],
-        dataDisplayedFunction: function() { setUpPageStatus = "complete"; }
+        ]
     });
 }
 

@@ -34,7 +34,10 @@ describe("kml", () => {
     });
     it("can have a folder date", () => {
         expectDateToBeCorrect( items[7].getStart() );
-        expectDateToBeCorrect( items[6].getStart() );
+        const startDate = items[6].getStart();
+        expect( startDate.getUTCFullYear() ).toBe(1990);
+        expect( startDate.getUTCMonth() ).toBe(0);
+        expect( startDate.getUTCDate() ).toBe(2);
     })
 });
 
@@ -60,8 +63,7 @@ function setUpPage() {
                     tagMap: { 'Test2':'foo' }
                 }
             }
-        ],
-        dataDisplayedFunction: function() { setUpPageStatus = "complete"; }
+        ]
     });
     ds = tm.datasets["test"];
     items = ds.getItems();

@@ -14,5 +14,4 @@ function setUpPage() {
         ]
     });
     correctMultiplePlacemarkCount = 3; // 4; -- omit overlay until I can make it work
-    setUpPageStatus = "complete";
 }

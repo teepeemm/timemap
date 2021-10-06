@@ -27,7 +27,7 @@ const
         "yahoo": "http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=MJmMF_XV34Fbt9iTJluolVk7T80lw8lD.lykqztF7S9F8szGFR01um.Rg5Svbsg.eMmZ",
         "microsoft": "http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6"
     },
-    dependencies = [ "Load", "Placemark", "InfoWindow" ],
+    dependencies = [ "Load", "Placemark" ], //[ "InfoWindow" ],
     built_dir = "specRunners/",
     files = fs.readdirSync(built_dir),
     test_page_preamble = `<!doctype html>

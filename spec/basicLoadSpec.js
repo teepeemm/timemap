@@ -39,8 +39,7 @@ function setUpPage() {
                     ]
                 }
             }
-        ],
-        dataDisplayedFunction: function() { setUpPageStatus = "complete"; }
+        ]
     });
 }
 

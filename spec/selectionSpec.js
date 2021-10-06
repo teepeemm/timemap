@@ -1,45 +1,44 @@
 
-jasmine.getEnv().configure({ random: false });
-
 let tm;
 
-function setUpPage() {
-    const items = [
-        {
-            "start" : "1980-01-02",
-            "end" : "1990-01-02",
-            "point" : {
-                "lat" : 40.0,
-                "lon" : 12.0
+const items = [
+    {
+        "start" : "1980-01-02",
+        "end" : "1990-01-02",
+        "point" : {
+            "lat" : 40.0,
+            "lon" : 12.0
+        },
+        "title" : "Test Event 1"
+    },{
+        "start" : "1980-01-02",
+        "end" : "1990-01-02",
+        "point" : {
+            "lat" : 41.0,
+            "lon" : 13.0
+        },
+        "title" : "Test Event 2"
+    },{
+        "start" : "1980-01-02",
+        "end" : "1990-01-02",
+        "point" : {
+            "lat" : 42.0,
+            "lon" : 14.0
+        },
+        "title" : "Test Event 3",
+        "options" : {
+            "description": "Test Description",
+            "openInfoWindow": function() {
+                $('body').append('<div id="custom3">' + this.getInfoHtml() + '<div>');
             },
-            "title" : "Test Event 1"
-        },{
-            "start" : "1980-01-02",
-            "end" : "1990-01-02",
-            "point" : {
-                "lat" : 41.0,
-                "lon" : 13.0
-            },
-            "title" : "Test Event 2"
-        },{
-            "start" : "1980-01-02",
-            "end" : "1990-01-02",
-            "point" : {
-                "lat" : 42.0,
-                "lon" : 14.0
-            },
-            "title" : "Test Event 3",
-            "options" : {
-                "description": "Test Description",
-                "openInfoWindow": function() {
-                    $('body').append('<div id="custom3">' + this.getInfoHtml() + '<div>');
-                },
-                "closeInfoWindow": function() {
-                    $('#custom3').remove();
-                }
+            "closeInfoWindow": function() {
+                $('#custom3').remove();
             }
         }
-    ]
+    }
+];
+
+function setUpPage() {
     tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required)
@@ -52,7 +51,6 @@ function setUpPage() {
             }
         ]
     });
-    setUpPageStatus = "complete";
     tm.setSelected(undefined);
 }
 
