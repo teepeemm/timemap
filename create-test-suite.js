@@ -50,6 +50,7 @@ const
 
         <!-- include source files here... -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="specSummary.js"></script>
 `,
     test_page_postamble = `</head>
 
@@ -86,18 +87,67 @@ const
 `;
 
 for (const file of files) {
-    fs.unlink(path.join(built_dir, file), err => {
-        if (err) {
-            throw err;
-        }
-    });
+    if ( file.endsWith('.html') ) {
+        fs.unlink(path.join(built_dir, file), err => {
+            if (err) {
+                throw err;
+            }
+        });
+    }
 }
 
-const all_pages = Object.entries(map_test_url).map(createMapSuite).flat(Infinity);
-build_master_html("suite_master.html",all_pages);
+Object.entries(map_test_url).map(createMapSuite).flat(Infinity);
+build_master_html();
 
-function build_master_html(filename,all_pages) {
-    //pass
+function build_master_html() {
+    const filename = built_dir+"suite_master.html";
+    let content = `<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>TimeMap Unit Tests</title>
+        <link rel="shortcut icon" type="image/png" href="../lib/jasmine-3.9.0/jasmine_favicon.png">
+        <style>td, th { padding: 2ex; }</style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="specSummary.js"></script>
+    </head>
+    <body>
+        <h1>TimeMap Unit Tests</h1>
+        <p>This page summarizes the Jasmine unit tests</p>
+        <table>
+            <thead>
+                <tr><th>Map api</th>`;
+    Object.keys(timeline_test_url).forEach( (timelineVer) => {
+        content += `<th>Timeline ${timelineVer}</th>`;
+    });
+    content += '</tr>\n</thead><tbody>\n';
+    Object.keys(map_test_url).forEach( (map_api) => {
+        content += '<tr><th>'+map_api+'</th>\n';
+        Object.keys(timeline_test_url).forEach( (timelineVer) => {
+            const iframeFile = `suite_${map_api}_${timelineVer}.html`;
+            content += `<td>
+        <a href="${iframeFile}"> Specs:
+        <span class="specSuccesses"></span> -
+        <span class="specFailures"></span>
+        (Expects: <span class="expectSuccesses"></span> -
+        <span class="expectFailures"></span>)
+        </a><br>
+        <iframe src="${iframeFile}"></iframe>
+        </td>
+        `;
+        });
+        content += '</tr>\n';
+    });
+    content += `</tbody>
+        </table>
+    </body>
+</html>
+`;
+    try {
+        fs.writeFileSync(filename,content);
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 function createMapSuite(map_api) {

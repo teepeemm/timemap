@@ -7,6 +7,9 @@ timemap-full-pack.js
 timemap-full.pack.js
 docs/*
 specRunners/*
+!specRunners/data/*
+!specRunners/timemap/*
+!specRunners/specSummary.js
 tests/built_tests/*
 jslint.txt
 .DS_Store
