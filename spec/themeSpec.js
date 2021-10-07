@@ -1,4 +1,6 @@
 
+(function () {
+
 let tm;
 
 const customIcon = "fakeimg.png",
@@ -167,4 +169,11 @@ describe("themes", () => {
         expect( tm.datasets["testC"].getItems()[2].placemark.iconUrl)
             .toBe( customTheme.icon );
     })
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
+
+}());

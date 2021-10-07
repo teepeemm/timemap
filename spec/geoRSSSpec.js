@@ -1,4 +1,6 @@
 
+(function () {
+
 let tm;
 
 const tmOptions = {
@@ -47,6 +49,12 @@ describe("geoRSS", () => {
     describe("mixed loading", mixedloading);
     describe("mixed KML time", mixedKMLtime);
     describe("mixed extra tags", mixedExtraTags);
+    afterAll( () => {
+        tm.clear();
+        tm = undefined;
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
 
 function datasetsDefined() {
@@ -237,3 +245,5 @@ function dataloader(args) {
         throw 'illegal argument';
     }
 }
+
+}());

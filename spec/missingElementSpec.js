@@ -1,4 +1,6 @@
 
+(function () {
+
 const items = [
         {
             "start" : "1980-01-02",
@@ -69,5 +71,12 @@ describe("missing element tests?", () => {
             .toBe( tmOptions.datasets[0].options.items
                     .filter( (item) => item.start ).length );
     });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
 // TODO lots more tests
+
+}());

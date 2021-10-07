@@ -1,4 +1,6 @@
 
+(function () {
+
 let tm;
 
 const items = [
@@ -78,12 +80,18 @@ describe("scroll to desired dates", () => {
         loadWithScrollTo(new Date(1990, 1, 1));
         expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
             .toBe(1990);
-    });
-    it("scrolled to given items", () => {
         years.forEach( (year,index) => {
+            expect( tm.getItems()[index] ).toBeDefined();
             tm.getItems()[index].scrollToStart();
             expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
                 .toBe( year );
         });
     });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
+
+}());

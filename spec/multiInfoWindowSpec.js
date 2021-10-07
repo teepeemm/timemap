@@ -1,4 +1,6 @@
 
+(function () {
+
 let tm;
     
 const timeoutInterval = 100,
@@ -93,4 +95,11 @@ describe("multiple windows", () => {
             expectNoWindowsOpen();
         });
     });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
+
+}());

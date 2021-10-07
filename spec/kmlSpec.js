@@ -1,4 +1,6 @@
 
+(function () {
+
 let tm, ds, items;
 
 describe("kml", () => {
@@ -39,6 +41,11 @@ describe("kml", () => {
         expect( startDate.getUTCMonth() ).toBe(0);
         expect( startDate.getUTCDate() ).toBe(2);
     })
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
 
 function expectDateToBeCorrect(startDate) {
@@ -127,3 +134,5 @@ function dataloader(args) {
         throw 'illegal argument';
     }
 }
+
+}());

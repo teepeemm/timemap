@@ -1,7 +1,5 @@
 
-// this can't be random because we slowly delete items and
-// need to count how many are left
-jasmine.getEnv().configure({ random: false });
+(function () {
 
 const datasetA = {
         title: "Test Dataset A",
@@ -69,7 +67,7 @@ const datasetA = {
     orgNumItems = tmOptions.datasets
         .map( (ds) => ds.options.items.length ).reduce( (a,b) => a+b );
 
-let tm, ds, item;
+let tm;
 
 function setUpPage() {
     tm = TimeMap.init(tmOptions);
@@ -77,76 +75,73 @@ function setUpPage() {
         eventSource = mainBand.getEventSource();
     mainBand.setCenterVisibleDate(eventSource.getEarliestDate());
     tm.showDatasets();
-    ds = tm.datasets["testA"];
-    item = ds.getItems()[0];
 }
 
-describe("deletion", () => {
-    beforeAll(setUpPage);
+describe("deletion and clearing", () => {
+    beforeEach(setUpPage);
+    describe("deletion", deletion);
+    describe("clearing", clearing);
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
+});
+
+function deletion() {
     it("has the right number of items", () => {
-        expect( ds.getItems().length )
+        expect( tm.datasets["testA"].getItems().length )
             .toBe(tmOptions.datasets.find( (ds) => ds.id==="testA" )
                   .options.items.length);
         expect( tm.timeline.getBand(0).getEventSource().getCount() )
             .toBe(orgNumItems);
     });
-    describe("delete an item", () => {
-        it("still has the right number of items", () => {
-            ds.deleteItem(item);
-            expect( ds.getItems().length )
-                .toBe(tmOptions.datasets
-                      .find( (ds) => ds.id==="testA" )
-                      .options.items.length-1);
-            expect( tm.timeline.getBand(0).getEventSource().getCount() )
-                .toBe(orgNumItems-1);
-        });
+    it("can delete an item", () => {
+        const item = tm.datasets["testA"].getItems()[0];
+        tm.datasets["testA"].deleteItem(item);
+        expect( item.placemark ).toBeNull();
+        expect( item.event ).toBeNull();
+        expect( tm.datasets["testA"].getItems().length )
+            .toBe(tmOptions.datasets
+                  .find( (ds) => ds.id==="testA" )
+                  .options.items.length-1);
+        expect( tm.timeline.getBand(0).getEventSource().getCount() )
+            .toBe(orgNumItems-1);
     });
-    describe("delete a dataset", () => {
-        it("has deleted the dataset", () => {
-            tm.deleteDataset("testC");
-            expect( tm.datasets["testC"] ).toBeUndefined();
-        });
+    it("can delete a dataset", () => {
+        tm.deleteDataset("testC");
+        expect( tm.datasets["testC"] ).toBeUndefined();
     });
-});
+}
 
-describe("clearing", () => {
-    beforeAll( () => {
-        ds = tm.datasets["testB"];
-    });
+function clearing() {
     it("has the right number of items", () => {
-        expect( ds.getItems().length )
+        expect( tm.datasets["testB"].getItems().length )
             .toBe(tmOptions.datasets.find( (ds) => ds.id==="testB" )
                   .options.items.length);
     });
-    describe("clear an item", () => {
-        it("no longer has the item, but does have events", () => {
-            ds.getItems()[0].clear();
-            expect( item.placemark ).toBeNull();
-            expect( item.event ).toBeNull();
-            expect( tm.timeline.getBand(0).getEventSource().getCount() )
-                .toBe( tmOptions.datasets
-                       .map( (ds) => ds.options.items.length )
-                       .reduce( (a,b) => a+b ) -2 );
-        });
+    it("can clear items in a dataset", () => {
+        tm.datasets["testB"].getItems()[0].clear();
+        expect( tm.timeline.getBand(0).getEventSource().getCount() )
+            .toBe( orgNumItems-1 );
     });
-    describe("clear the dataset", () => {
-        it("has no items but one event", () => {
-            ds.clear();
-            expect( ds.getItems().length ).toBe(0);
-            expect( tm.timeline.getBand(0).getEventSource().getCount() )
-                .toBe( tmOptions.datasets
-                        .filter( (ds) => ds.id!=="testB" )
-                        .map( (ds) => ds.options.items.length )
-                        .reduce( (a,b) => a+b ) -1);
-        });
+    it("can clear a dataset of items", () => {
+        tm.datasets["testB"].clear();
+        expect( tm.datasets["testB"].getItems().length ).toBe(0);
+        expect( tm.timeline.getBand(0).getEventSource().getCount() )
+            .toBe( tmOptions.datasets
+                    .filter( (ds) => ds.id!=="testB" )
+                    .map( (ds) => ds.options.items.length )
+                    .reduce( (a,b) => a+b ) );
     });
-    describe("clear the timeline", () => {
-        it("has been emptied", () => {
-            tm.clear();
-            expect( tm.datasets["testA"] ).toBeUndefined();
-            expect( tm.datasets["testB"] ).toBeUndefined();
-            expect( tm.timeline.getBand(0).getEventSource().getCount() )
-                .toBe(0);
-        });
+    it("can empty a timeline", () => {
+        tm.clear();
+        expect( tm.datasets.length ).toBe(0);
+        expect( tm.datasets["testA"] ).toBeUndefined();
+        expect( tm.datasets["testB"] ).toBeUndefined();
+        expect( tm.timeline.getBand(0).getEventSource().getCount() )
+            .toBe(0);
     });
-});
+}
+
+}());

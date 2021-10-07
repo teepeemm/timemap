@@ -1,4 +1,6 @@
 
+(function () {
+
 let tm;
 
 const items = [
@@ -91,4 +93,11 @@ describe("selections", () => {
         });
         expectNoSelection();
     });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
+
+}());

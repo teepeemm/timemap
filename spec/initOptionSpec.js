@@ -1,5 +1,7 @@
 
-let tm, tm2, tm3;
+(function () {
+
+let tm, tm2, tm3, tm4;
 
 const items = [
     {
@@ -138,6 +140,14 @@ describe("initOptions", () => {
     describe("default map type", defaultMapType);
     describe("center and zoom", centerAndZoom);
     describe("timeline bands", timelineBands);
+    afterAll( () => {
+        tm.clear();
+        tm2.clear();
+        tm3.clear();
+        tm4.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
 
 function defaultMapType() {
@@ -226,3 +236,5 @@ function timelineBands() {
         expect( tm4.timeline.getBand(0).getEventSource) .toBe(tm4.timeline.getBand(1).getEventSource);
     });
 }
+
+}())

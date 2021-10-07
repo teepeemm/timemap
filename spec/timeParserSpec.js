@@ -1,4 +1,6 @@
 
+(function () {
+
 describe("can parse dates and times", () => {
     beforeAll(setUpPage);
     it("can parse a combination of ISO8601 and Gregorian", () => {
@@ -14,6 +16,11 @@ describe("can parse dates and times", () => {
     it("can parse a variety of years", () => {
         expectGregorianYear('gregorian');
         expectNulls('gregorian');
+    });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
     });
 });
 
@@ -190,3 +197,5 @@ function setUpPage() {
         ]
     });
 }
+
+}());

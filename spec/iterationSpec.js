@@ -1,4 +1,6 @@
 
+(function () {
+
 const datasetA = {
         title: "Test Dataset 1",
         id: "test1",
@@ -96,8 +98,8 @@ describe("iteration tests", () => {
             expect( tm.datasets['test2'].getItems(1).getPrev() )
                 .toBe( tm.datasets['test1'].getItems(0) );
             expect( tm.datasets['test1'].getItems(1).getPrev() ).toBeNull();
-        } else {
-            expect( tm.datasets['test1'].getItems(0).getPrev ).toBeUndefined();
+//        } else {
+//            expect( tm.datasets['test1'].getItems(0).getPrev ).toBeUndefined();
         }
     });
     it("can flag each item in a dataset", () => {
@@ -114,8 +116,15 @@ describe("iteration tests", () => {
         expect( Object.values(tm.datasets).every( (ds) => ds.flag===3 ) )
             .toBeTrue();
     });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
 
 function flagwith(num) {
     return function (input) { input.flag = num; };
 }
+
+}());

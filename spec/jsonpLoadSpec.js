@@ -1,5 +1,8 @@
+
+(function () {
+
 function setUpPage() {
-    tm = TimeMap.init({
+    LoadSpec.tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required)
         datasets: [
@@ -15,7 +18,9 @@ function setUpPage() {
 
 function dataloader(args) {
     if ( args.url.indexOf("data/data.js?cb=") >= 0 ) {
-        TimeMap.loaders.cb._0([
+//        TimeMap.loaders.cb._0([/*json*/]);
+        // it looks like there's only one loader at a time, so this should work
+        Object.values(TimeMap.loaders.cb)[0]([
             {
                 "start" : "1980-01-02",
                 "end" : "2000-01-02",
@@ -46,3 +51,9 @@ function dataloader(args) {
         throw 'incorrect url';
     }
 }
+
+describe("jsonp loading", () => {
+    LoadSpec.specs(setUpPage,dataloader);
+});
+
+}());

@@ -1,6 +1,8 @@
 
+(function () {
+
 function setUpPage() {
-    tm = TimeMap.init({
+    LoadSpec.tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required)
         datasets: [
@@ -23,3 +25,9 @@ function dataloader(args) {
         throw 'illegal argument';
     }
 }
+
+describe("kml loading", () => {
+    LoadSpec.specs(setUpPage,dataloader);
+});
+
+}());

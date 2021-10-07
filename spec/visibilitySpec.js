@@ -1,4 +1,6 @@
 
+(function () {
+
 const parser = Timeline.DateTime.parseIso8601DateTime;
 
 let tm, ds, item, placemark, eventSource;
@@ -84,6 +86,11 @@ describe("visibility", () => {
         expect( placemark.isHidden() ).toBeTrue();
         tm.timeline.getBand(0).setCenterVisibleDate(parser("1980-01-01"));
     });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
 
 function setUpPage() {
@@ -123,3 +130,5 @@ function setUp() {
     item = ds.getItems()[0];
     placemark = item.placemark;
 }
+
+}());

@@ -1,6 +1,9 @@
+
+(function () {
+
 function setUpPage() {
     spyOn($,'ajax').and.callFake(dataloader);
-    tm = TimeMap.init({
+    PlacemarkSpec.tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required)
         datasets: [
@@ -12,8 +15,12 @@ function setUpPage() {
             }
         ]
     });
-    correctMultiplePlacemarkCount = 3; // no overlay possible in KML
+    PlacemarkSpec.correctMultiplePlacemarkCount = 3; // no overlay possible in KML
 }
+
+describe("kml placemarks", () => {
+    PlacemarkSpec.specs(setUpPage);
+});
 
 function dataloader(args) {
     if ( args.url.indexOf("data/placemarks.kml") >= 0 ) {
@@ -119,3 +126,5 @@ function dataloader(args) {
         throw 'illegal argument exception';
     }
 }
+
+}());

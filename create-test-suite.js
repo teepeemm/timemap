@@ -21,13 +21,16 @@ const
         (arg) => arg.startsWith("GMAPS_API=")
     ).slice(10),
     map_test_url = {
-        "google": "http://maps.google.com/maps?file=api&v=2&key="+google_api_key,
+//        "google": "http://maps.google.com/maps?file=api&v=2&key="+google_api_key,
+//        G maps v2 doesn't seem to work anymore
         "googlev3": "http://maps.google.com/maps/api/js?key="+google_api_key,
         "openlayers": "http://openlayers.org/api/OpenLayers.js",
-        "yahoo": "http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=MJmMF_XV34Fbt9iTJluolVk7T80lw8lD.lykqztF7S9F8szGFR01um.Rg5Svbsg.eMmZ",
-        "microsoft": "http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6"
+//        "yahoo": "http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=MJmMF_XV34Fbt9iTJluolVk7T80lw8lD.lykqztF7S9F8szGFR01um.Rg5Svbsg.eMmZ",
+//        does Yahoo do this anymore?
+//        "microsoft": "http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6"
+//        Microsoft is now up to version 8
     },
-    dependencies = [ "Load", "Placemark" ], //[ "InfoWindow" ],
+    dependencies = [ "Load", "Placemark" ],
     built_dir = "specRunners/",
     files = fs.readdirSync(built_dir),
     test_page_preamble = `<!doctype html>
@@ -91,7 +94,11 @@ for (const file of files) {
 }
 
 const all_pages = Object.entries(map_test_url).map(createMapSuite).flat(Infinity);
-build_suite_html("suite_master.html",all_pages);
+build_master_html("suite_master.html",all_pages);
+
+function build_master_html(filename,all_pages) {
+    //pass
+}
 
 function createMapSuite(map_api) {
     return Object.entries(timeline_test_url).map(
@@ -100,12 +107,13 @@ function createMapSuite(map_api) {
 }
 
 function createSuite(map_api,timeline_api) {
-    const test_pages = test_names.map(
-        createPage.bind(undefined,map_api,timeline_api)
-    );
+//    const test_pages = test_names.map(
+//        createPage.bind(undefined,map_api,timeline_api)
+//    );
     const suite_page = "suite_"+map_api[0]+"_"+timeline_api[0]+".html";
-    build_suite_html(suite_page,test_pages);
-    return test_pages;
+    build_suite_html(suite_page,map_api,timeline_api);
+    return suite_page;
+//    return test_pages;
 }
 
 function createPage(map_api,timeline_api,test_name) {
@@ -114,30 +122,19 @@ function createPage(map_api,timeline_api,test_name) {
     return test_page;
 }
 
-function build_suite_html(suite_page,test_pages) {
+function build_suite_html(suite_page,map_api,timeline_api) {
     const filename = built_dir+suite_page,
-        content = `<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>TimeMap Test Suite</title>
-        <script>
-            const test_pages = [
-                ${test_pages.map( (page) => '"'+page+'"' ).join(",\n")}
-            ];
-            function suite() {
-                var newsuite = new jsUnitTestSuite();
-                test_pages.forEach( newsuite.addTestPage.bind(newsuite) );
-                return newsuite;
-            }
-        </script>
-    </head>
-    <body>
-        <h1>TimeMap Test Suite</h1>
-        <p>This page contains a suite of tests for testing TimeMap with jsUnit.</p>
-    </body>
-</html>
-`;
+        scripts = [
+            map_api[1],
+            mxn_test_url_base_dev+"?("+map_api[0]+")",
+            timeline_api[1],
+            "../timemap-full.pack.js"
+        ];
+    scripts.push(...[dependencies,test_names].flat(Infinity).map(
+        (script) => `../spec/${script}Spec.js` ) );
+    const content = test_page_preamble
+        +scripts.map( (script) => `<script src="${script}"></script>` ).join('\n')
+        +test_page_postamble;
     try {
         fs.writeFileSync(filename,content);
     } catch (err) {

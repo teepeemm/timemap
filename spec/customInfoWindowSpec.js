@@ -1,4 +1,6 @@
 
+(function () {
+
 let tm;
     
 const timeoutInterval = 100,
@@ -130,4 +132,11 @@ describe("custom info windows", () => {
             expectNoOpenWindows()
         });
     });
+    afterAll( () => {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
 });
+
+}());
