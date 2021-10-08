@@ -1,5 +1,5 @@
 
-/* global
+/*global
  TimeMap, TimeMapDataset
 */
 
@@ -94,7 +94,7 @@ TimeMap.loaders.georss.parse = function (node) {
     nsMap.geo = 'http://www.w3.org/2003/01/geo/wgs84_pos#';
     nsMap.kml = 'http://www.opengis.net/kml/2.2';
 
-    for (let i=0; i<placemarks.length; i++) {
+    for (i=0; i<placemarks.length; i+=1) {
         pm = placemarks[i];
         data = { options: {} };
         // get title & description

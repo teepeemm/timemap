@@ -1,20 +1,15 @@
 
-if ( window.jasmine ) {
-    jasmine.getEnv().addReporter({
-        jasmineDone: function () {
-            if ( window.parent !== window ) {
-                parent.postMessage(getJasmineSummary(),'*');
-            }
-        }
-    });
-}
+/*global jsApiReporter, $, jasmine, window */
+/*jslint es6 */
+
+"use strict";
 
 function getJasmineSummary() {
     let specSuccesses = 0,
         specFailures = 0,
         expectSuccesses = 0,
         expectFailures = 0;
-    jsApiReporter.specs().forEach( (spec) => {
+    jsApiReporter.specs().forEach( function (spec) {
         if ( spec.status === 'passed' ) {
             specSuccesses += 1;
         } else {
@@ -36,14 +31,22 @@ function getJasmineSummary() {
     };
 }
 
-if ( window.parent === window ) {
-    addEventListener('message',jasmineTimemapComplete);
+if ( window.jasmine ) {
+    jasmine.getEnv().addReporter({
+        jasmineDone: function () {
+            if ( window.parent !== window ) {
+                window.parent.postMessage(getJasmineSummary(),'*');
+            }
+        }
+    });
 }
 
 function jasmineTimemapComplete(jasmineSummary) {
-    console.log('jasmineTimemapComplete');
-    console.log(jasmineSummary);
-    Object.entries(jasmineSummary.data.summary).forEach( ([k,v]) => {
+    Object.entries(jasmineSummary.data.summary).forEach( function ([k, v]) {
         $(`a[href="${jasmineSummary.data.filename}"] span.${k}`).text(v);
     });
+}
+
+if ( window.parent === window ) {
+    window.addEventListener('message',jasmineTimemapComplete);
 }

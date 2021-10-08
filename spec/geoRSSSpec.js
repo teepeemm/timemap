@@ -1,5 +1,10 @@
 
+/*global TimeMap, it, describe, $, beforeAll, spyOn, afterAll, expect, mxn */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 let tm;
 
@@ -31,15 +36,15 @@ const tmOptions = {
                 }
             }
         ]
-    }
+    };
 
 function setUpPage() {
-    TimeMap.util.nsMap['dc'] = 'http://purl.org/dc/elements/1.1/';
+    TimeMap.util.nsMap.dc = 'http://purl.org/dc/elements/1.1/';
     tm = TimeMap.init(tmOptions);
 }
 
-describe("geoRSS", () => {
-    beforeAll( () => {
+describe("geoRSS", function() {
+    beforeAll( function() {
         spyOn($,'ajax').and.callFake(dataloader);
         setUpPage();
     });
@@ -49,7 +54,7 @@ describe("geoRSS", () => {
     describe("mixed loading", mixedloading);
     describe("mixed KML time", mixedKMLtime);
     describe("mixed extra tags", mixedExtraTags);
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         tm = undefined;
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
@@ -58,31 +63,31 @@ describe("geoRSS", () => {
 });
 
 function datasetsDefined() {
-    it("has defined the datasets", () => {
+    it("has defined the datasets", function() {
         expect( $.ajax ).toHaveBeenCalledTimes(3);
         expect( tm ).toBeDefined();
         expect( tm.datasets ).toBeDefined();
-        expect( tm.datasets["rss"] ).toBeDefined();
-        expect( tm.datasets["atom"] ).toBeDefined();
-        expect( tm.datasets["mixed"] ).toBeDefined();
+        expect( tm.datasets.rss ).toBeDefined();
+        expect( tm.datasets.atom ).toBeDefined();
+        expect( tm.datasets.mixed ).toBeDefined();
     });
 }
 
 function rssloading() {
-    it("has loaded the rss dataset", () => {
-        expect( tm.datasets["rss"].getItems().length ).toBe(1);
+    it("has loaded the rss dataset", function() {
+        expect( tm.datasets.rss.getItems().length ).toBe(1);
     });
-    it("has the correct earliest date", () => {
-        expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCFullYear() )
+    it("has the correct earliest date", function() {
+        expect( tm.datasets.rss.eventSource.getEarliestDate().getUTCFullYear() )
             .toBe(1980);
-        expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCMonth() )
+        expect( tm.datasets.rss.eventSource.getEarliestDate().getUTCMonth() )
             .toBe(0);
         // Timeline seems to adjust for the timezone after parsing :(
-        expect( tm.datasets["rss"].eventSource.getEarliestDate().getUTCDate() )
+        expect( tm.datasets.rss.eventSource.getEarliestDate().getUTCDate() )
             .toBe(2);
     });
-    it("has the right item", () => {
-        const item = tm.datasets["rss"].getItems()[0],
+    it("has the right item", function() {
+        const item = tm.datasets.rss.getItems()[0],
             point = new mxn.LatLonPoint(23.456, 12.345);
         expect( item.getTitle() ).toBe("Test Event");
         expect( item.getType() ).toBe("marker");
@@ -91,20 +96,20 @@ function rssloading() {
 }
 
 function atomloading() {
-    it("has loaded the atom dataset", () => {
-        expect( tm.datasets["atom"].getItems().length ).toBe(1);
+    it("has loaded the atom dataset", function() {
+        expect( tm.datasets.atom.getItems().length ).toBe(1);
     });
-    it("has the correct earliest date", () => {
-        expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCFullYear() )
+    it("has the correct earliest date", function() {
+        expect( tm.datasets.atom.eventSource.getEarliestDate().getUTCFullYear() )
             .toBe(1980);
-        expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCMonth() )
+        expect( tm.datasets.atom.eventSource.getEarliestDate().getUTCMonth() )
             .toBe(0);
         // Timeline seems to adjust for the timezone after parsing :(
-        expect( tm.datasets["atom"].eventSource.getEarliestDate().getUTCDate() )
+        expect( tm.datasets.atom.eventSource.getEarliestDate().getUTCDate() )
             .toBe(2);
     });
-    it("has the right item", () => {
-        const item = tm.datasets["atom"].getItems()[0],
+    it("has the right item", function() {
+        const item = tm.datasets.atom.getItems()[0],
             point = new mxn.LatLonPoint(23.456, 12.345);
         expect( item.getTitle() ).toBe("Test Event");
         expect( item.getType() ).toBe("marker");
@@ -113,42 +118,42 @@ function atomloading() {
 }
 
 function mixedloading() {
-    it("has loaded the mixed dataset", () => {
-        expect( tm.datasets["mixed"].getItems().length ).toBe(14);
+    it("has loaded the mixed dataset", function() {
+        expect( tm.datasets.mixed.getItems().length ).toBe(14);
     });
-    it("has the right placemarks", () => {
+    it("has the right placemarks", function() {
         const point = new mxn.LatLonPoint(23.456, 12.345);
-        tm.datasets["mixed"].getItems().slice(0,4).forEach( (item) => {
+        tm.datasets.mixed.getItems().slice(0,4).forEach( function(item) {
             expect( item.getType() ).toBe("marker");
             expect( item.getInfoPoint().equals(point) ).toBeTrue();
         });
     });
-    it("has the right polylines", () => {
+    it("has the right polylines", function() {
         const points = [
             new mxn.LatLonPoint(45.256, -110.45),
             new mxn.LatLonPoint(46.46, -109.48),
             new mxn.LatLonPoint(43.84, -109.86)
         ];
-        tm.datasets["mixed"].getItems().slice(4,6).forEach( (item) => {
+        tm.datasets.mixed.getItems().slice(4,6).forEach( function(item) {
             expect( item.getType() ).toBe("polyline");
             expect( TimeMap.util.getPlacemarkType(item.placemark) )
                 .toBe("polyline");
             expect( item.placemark.points ).toBeDefined();
             expect( item.placemark.points.length ).toBe(3);
             expect( item.getInfoPoint().equals(points[1]) ).toBeTrue();
-            points.forEach( (point,index) => {
+            points.forEach( function(point,index) {
                 expect( item.placemark.points[index].equals(point) ).toBeTrue();
             });
         });
     });
-    it("has the right polygons", () => {
+    it("has the right polygons", function() {
         const points = [
             new mxn.LatLonPoint(45.256, -110.45),
             new mxn.LatLonPoint(46.46, -109.48),
             new mxn.LatLonPoint(43.84, -109.86)
         ],
         centerPoint = new mxn.LatLonPoint(45.150000000000006, -109.965);
-        tm.datasets["mixed"].getItems().slice(6,8).forEach( (item) => {
+        tm.datasets.mixed.getItems().slice(6,8).forEach( function(item) {
             expect( item.getType() ).toBe("polygon");
             expect( TimeMap.util.getPlacemarkType(item.placemark) )
                 .toBe("polygon");
@@ -156,7 +161,7 @@ function mixedloading() {
             expect( item.placemark.points ).toBeDefined();
             expect( item.placemark.points.length ).toBe(4);
             expect( item.getInfoPoint().equals(centerPoint) ).toBeTrue();
-            points.forEach( (point,index) => {
+            points.forEach( function(point,index) {
                 expect( item.placemark.points[index].equals(point) ).toBeTrue();
             });
         });
@@ -164,20 +169,20 @@ function mixedloading() {
 }
 
 function mixedKMLtime() {
-    it("has the right start", () => {
-        const d = tm.datasets["mixed"].getItems()[8].event.getStart();
+    it("has the right start", function() {
+        const d = tm.datasets.mixed.getItems()[8].event.getStart();
         expect( d.getUTCFullYear() ).toBe(1985);
         expect( d.getUTCMonth() ).toBe(0);
         expect( d.getUTCDate() ).toBe(2);
     });
-    it("has the right end", () => {
-        const d = tm.datasets["mixed"].getItems()[8].event.getEnd();
+    it("has the right end", function() {
+        const d = tm.datasets.mixed.getItems()[8].event.getEnd();
         expect( d.getUTCFullYear() ).toBe(2000);
         expect( d.getUTCMonth() ).toBe(0);
         expect( d.getUTCDate() ).toBe(2);
     });
-    it("has the right instant date", () => {
-        const item = tm.datasets["mixed"].getItems()[9],
+    it("has the right instant date", function() {
+        const item = tm.datasets.mixed.getItems()[9],
             d = item.event.getStart();
         expect( d.getUTCFullYear() ).toBe(1985);
         expect( d.getUTCMonth() ).toBe(0);
@@ -187,8 +192,8 @@ function mixedKMLtime() {
 }
 
 function mixedExtraTags() {
-    it("has read the extra tags", () => {
-        const items = tm.datasets["mixed"].getItems();
+    it("has read the extra tags", function() {
+        const items = tm.datasets.mixed.getItems();
         expect( items[10].opts.link ).toBe( "http://www.example.com/" );
         expect( items[11].opts['dc:subject'] ).toBe( "Testing" );
         expect( items[12].opts.email ).toBe( "nick@example.com" );

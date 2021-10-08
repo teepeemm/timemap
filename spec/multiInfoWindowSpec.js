@@ -1,5 +1,10 @@
 
+/*global TimeMap, $, expect, describe, beforeAll, it, afterAll */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 let tm;
     
@@ -49,7 +54,7 @@ function setUpPage() {
 
 // we need some delay or Google maps v3 won't close windows
 function openItem(x,done) {
-    const item = tm.datasets['test'].getItems()[x];
+    const item = tm.datasets.test.getItems()[x];
     if (item) {
         item.openInfoWindow();
         setTimeout(openItem, 150, x+1, done);
@@ -61,17 +66,17 @@ function openItem(x,done) {
 function testLastWindowOpen(done,attempts) {
     if ( lastWindowOpen() ) {
         done();
-    } else if ( maxAttempts < attempts ) {
-        throw 'took too long';
-    } else {
+    } else if ( attempts < maxAttempts ) {
         setTimeout(testLastWindowOpen, timeoutInterval, done, attempts+1);
+    } else {
+        throw 'took too long';
     }
 }
 
 function lastWindowOpen() {
     // this is effectively the assertion
-    return $('div.infotitle, div.infodescription').length == 2 &&
-        $('div.infotitle').text() == 'Test Event 3'
+    return $('div.infotitle, div.infodescription').length === 2 &&
+        $('div.infotitle').text() === 'Test Event 3';
 }
 
 function expectNoWindowsOpen() {
@@ -82,20 +87,20 @@ function expectNoWindowsOpen() {
     }
 }
 
-describe("multiple windows", () => {
+describe("multiple windows", function() {
     beforeAll(setUpPage);
-    describe("opening windows", () => {
-        beforeAll( (done) => {
+    describe("opening windows", function() {
+        beforeAll( function(done) {
             expectNoWindowsOpen();
-            openItem(0,done)
+            openItem(0,done);
         });
-        it("should open one info window", () => {
+        it("should open one info window", function() {
             expect( lastWindowOpen() ).toBeTrue();
             tm.timeline.getBand(0).setCenterVisibleDate(new Date());
             expectNoWindowsOpen();
         });
     });
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');

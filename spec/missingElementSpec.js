@@ -1,5 +1,10 @@
 
+/*global TimeMap, describe, beforeAll, it, expect, afterAll, $ */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 const items = [
         {
@@ -57,21 +62,21 @@ let tm;
 
 function setUp() {
     tm = TimeMap.init(tmOptions);
-    var eventSource = tm.timeline.getBand(0).getEventSource();
+    const eventSource = tm.timeline.getBand(0).getEventSource();
     tm.timeline.getBand(0).setCenterVisibleDate(eventSource.getEarliestDate());
     tm.showDatasets();
 }
 
-describe("missing element tests?", () => {
+describe("missing element tests?", function() {
     beforeAll(setUp);
-    it("has the right number of items", () => {
-        expect( tm.datasets["test"].getItems().length )
+    it("has the right number of items", function() {
+        expect( tm.datasets.test.getItems().length )
             .toBe( tmOptions.datasets[0].options.items.length );
-        expect( tm.datasets["test"].eventSource.getCount() )
+        expect( tm.datasets.test.eventSource.getCount() )
             .toBe( tmOptions.datasets[0].options.items
                     .filter( (item) => item.start ).length );
     });
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');

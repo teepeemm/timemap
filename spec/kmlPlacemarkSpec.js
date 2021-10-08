@@ -1,5 +1,10 @@
 
+/*global $, spyOn, PlacemarkSpec, TimeMap, describe */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 function setUpPage() {
     spyOn($,'ajax').and.callFake(dataloader);
@@ -18,7 +23,7 @@ function setUpPage() {
     PlacemarkSpec.correctMultiplePlacemarkCount = 3; // no overlay possible in KML
 }
 
-describe("kml placemarks", () => {
+describe("kml placemarks", function() {
     PlacemarkSpec.specs(setUpPage);
 });
 

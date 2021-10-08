@@ -10,7 +10,7 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-/* global TimeMap */
+/*global TimeMap */
 
 (function () {
     var loaders = TimeMap.loaders;
@@ -97,4 +97,4 @@ loaders.json = function (options) {
 // For backwards compatibility
 loaders.json_string = loaders.json;
 
-})();
+}());

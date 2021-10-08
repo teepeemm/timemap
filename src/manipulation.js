@@ -1,7 +1,6 @@
 
-/*global
- Timeline
-*/
+/*global Timeline */
+/*jslint es6, this, name */
 
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.
@@ -18,6 +17,8 @@
  */
 
 (function () {
+    "use strict";
+
     var window = this,
         TimeMap = window.TimeMap,
         TimeMapDataset = window.TimeMapDataset,
@@ -433,4 +434,4 @@ TimeMapItem.prototype.getPrev = function (inDataset) {
     return this.getNextPrev(true, inDataset);
 };
 
-})();
+}());

@@ -1,5 +1,11 @@
 
+/*global Timeline, expect, describe, TimeMap, beforeAll, beforeEach, afterEach,
+ it, afterAll, $ */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 const parser = Timeline.DateTime.parseIso8601DateTime;
 
@@ -37,56 +43,56 @@ function expectAllVisible(flag) {
     expectDatasetVisible(flag);
 }
 
-describe("visibility", () => {
+describe("visibility", function() {
     beforeAll(setUp);
-    beforeEach( () => {
+    beforeEach( function() {
         expectAllVisible(true);
     });
-    afterEach( () => {
+    afterEach( function() {
         expectAllVisible(true);
     });
-    it("can hide items", () => {
+    it("can hide items", function() {
         item.hide();
         expectItemVisible(false);
         item.show();
     });
-    it("can hide placemarks", () => {
+    it("can hide placemarks", function() {
         item.hidePlacemark();
         expectPlacemarkVisible(false);
         item.showPlacemark();
     });
-    it("can hide events", () => {
+    it("can hide events", function() {
         item.hideEvent();
         expectEventVisible(false);
         item.showEvent();
     });
-    it("can hide a dataset", () => {
+    it("can hide a dataset", function() {
         ds.hide();
         expectDatasetVisible(false);
         ds.show();
     });
-    it("can hide all datasets", () => {
+    it("can hide all datasets", function() {
         tm.hideDatasets();
         expectDatasetVisible(false);
         tm.showDatasets();
     });
-    it("can hide a dataset by id", () => {
+    it("can hide a dataset by id", function() {
         tm.hideDataset("test");
         expectDatasetVisible(false);
         tm.showDatasets();
         tm.hideDataset("notarealid");
     });
-    it("can hide the past", () => {
+    it("can hide the past", function() {
         tm.timeline.getBand(0).setCenterVisibleDate(parser("2000-01-01"));
         expect( placemark.isHidden() ).toBeTrue();
         tm.timeline.getBand(0).setCenterVisibleDate(parser("1980-01-01"));
     });
-    it("can hide the future", () => {
+    it("can hide the future", function() {
         tm.timeline.getBand(0).setCenterVisibleDate(parser("1970-01-01"));
         expect( placemark.isHidden() ).toBeTrue();
         tm.timeline.getBand(0).setCenterVisibleDate(parser("1980-01-01"));
     });
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');
@@ -126,7 +132,7 @@ function setUp() {
     eventSource = tm.timeline.getBand(0).getEventSource();
     tm.timeline.getBand(0).setCenterVisibleDate(eventSource.getEarliestDate());
     tm.showDatasets();
-    ds = tm.datasets["test"];
+    ds = tm.datasets.test;
     item = ds.getItems()[0];
     placemark = item.placemark;
 }

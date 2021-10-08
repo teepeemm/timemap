@@ -1,5 +1,10 @@
 
+/*global LoadSpec, TimeMap, $, describe */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 function setUpPage() {
     LoadSpec.tm = TimeMap.init({
@@ -26,7 +31,7 @@ function dataloader(args) {
     }
 }
 
-describe("kml loading", () => {
+describe("kml loading", function() {
     LoadSpec.specs(setUpPage,dataloader);
 });
 

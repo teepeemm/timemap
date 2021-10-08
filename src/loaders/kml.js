@@ -11,6 +11,7 @@
  */
 
 /*globals TimeMap, $ */
+/*jslint this */
 
 /**
  * @class

@@ -1,5 +1,10 @@
 
+/*global TimeMap, it, describe, beforeAll, $, expect, beforeEach, afterAll */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 const datasetA = {
         title: "Test Dataset A",
@@ -77,11 +82,11 @@ function setUpPage() {
     tm.showDatasets();
 }
 
-describe("deletion and clearing", () => {
+describe("deletion and clearing", function() {
     beforeEach(setUpPage);
     describe("deletion", deletion);
     describe("clearing", clearing);
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');
@@ -89,56 +94,56 @@ describe("deletion and clearing", () => {
 });
 
 function deletion() {
-    it("has the right number of items", () => {
-        expect( tm.datasets["testA"].getItems().length )
+    it("has the right number of items", function() {
+        expect( tm.datasets.testA.getItems().length )
             .toBe(tmOptions.datasets.find( (ds) => ds.id==="testA" )
                   .options.items.length);
         expect( tm.timeline.getBand(0).getEventSource().getCount() )
             .toBe(orgNumItems);
     });
-    it("can delete an item", () => {
-        const item = tm.datasets["testA"].getItems()[0];
-        tm.datasets["testA"].deleteItem(item);
+    it("can delete an item", function() {
+        const item = tm.datasets.testA.getItems()[0];
+        tm.datasets.testA.deleteItem(item);
         expect( item.placemark ).toBeNull();
         expect( item.event ).toBeNull();
-        expect( tm.datasets["testA"].getItems().length )
+        expect( tm.datasets.testA.getItems().length )
             .toBe(tmOptions.datasets
                   .find( (ds) => ds.id==="testA" )
                   .options.items.length-1);
         expect( tm.timeline.getBand(0).getEventSource().getCount() )
             .toBe(orgNumItems-1);
     });
-    it("can delete a dataset", () => {
+    it("can delete a dataset", function() {
         tm.deleteDataset("testC");
-        expect( tm.datasets["testC"] ).toBeUndefined();
+        expect( tm.datasets.testC ).toBeUndefined();
     });
 }
 
 function clearing() {
-    it("has the right number of items", () => {
-        expect( tm.datasets["testB"].getItems().length )
+    it("has the right number of items", function() {
+        expect( tm.datasets.testB.getItems().length )
             .toBe(tmOptions.datasets.find( (ds) => ds.id==="testB" )
                   .options.items.length);
     });
-    it("can clear items in a dataset", () => {
-        tm.datasets["testB"].getItems()[0].clear();
+    it("can clear items in a dataset", function() {
+        tm.datasets.testB.getItems()[0].clear();
         expect( tm.timeline.getBand(0).getEventSource().getCount() )
             .toBe( orgNumItems-1 );
     });
-    it("can clear a dataset of items", () => {
-        tm.datasets["testB"].clear();
-        expect( tm.datasets["testB"].getItems().length ).toBe(0);
+    it("can clear a dataset of items", function() {
+        tm.datasets.testB.clear();
+        expect( tm.datasets.testB.getItems().length ).toBe(0);
         expect( tm.timeline.getBand(0).getEventSource().getCount() )
             .toBe( tmOptions.datasets
                     .filter( (ds) => ds.id!=="testB" )
                     .map( (ds) => ds.options.items.length )
                     .reduce( (a,b) => a+b ) );
     });
-    it("can empty a timeline", () => {
+    it("can empty a timeline", function() {
         tm.clear();
         expect( tm.datasets.length ).toBe(0);
-        expect( tm.datasets["testA"] ).toBeUndefined();
-        expect( tm.datasets["testB"] ).toBeUndefined();
+        expect( tm.datasets.testA ).toBeUndefined();
+        expect( tm.datasets.testB ).toBeUndefined();
         expect( tm.timeline.getBand(0).getEventSource().getCount() )
             .toBe(0);
     });

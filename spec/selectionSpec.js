@@ -1,5 +1,10 @@
 
+/*global $, TimeMap, expect, describe, beforeAll, it, afterAll */
+/*jslint es6, this */
+
 (function () {
+
+"use strict";
 
 let tm;
 
@@ -59,8 +64,8 @@ function setUpPage() {
 function expectSelected(chosenItem) {
     expect( tm.getSelected() ).toBe(chosenItem);
     expect( chosenItem.isSelected() ).toBeTrue();
-    tm.datasets["test"].getItems().filter( (item) => chosenItem!==item )
-        .forEach( expectNotSelected )
+    tm.datasets.test.getItems().filter( (item) => chosenItem!==item )
+        .forEach( expectNotSelected );
 }
 
 function expectNotSelected(item) {
@@ -72,20 +77,20 @@ function expectNoSelection() {
     expect( tm.getSelected() ).toBeUndefined();
 }
 
-describe("selections", () => {
+describe("selections", function() {
     beforeAll(setUpPage);
-    it("can directly select", () => {
+    it("can directly select", function() {
         expectNoSelection();
-        tm.datasets["test"].getItems().forEach( (item) => {
+        tm.datasets.test.getItems().forEach( function(item) {
             tm.setSelected(item);
             expectSelected(item);
-        })
+        });
         tm.setSelected(undefined);
         expectNoSelection();
     });
-    it("selects open windows", () => {
+    it("selects open windows", function() {
         expectNoSelection();
-        tm.datasets["test"].getItems().forEach( (item) => {
+        tm.datasets.test.getItems().forEach( function(item) {
             item.openInfoWindow();
             expectSelected(item);
             item.closeInfoWindow();
@@ -93,7 +98,7 @@ describe("selections", () => {
         });
         expectNoSelection();
     });
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');

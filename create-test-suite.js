@@ -26,9 +26,10 @@ const
         "googlev3": "http://maps.google.com/maps/api/js?key="+google_api_key,
         "openlayers": "http://openlayers.org/api/OpenLayers.js",
 //        "yahoo": "http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=MJmMF_XV34Fbt9iTJluolVk7T80lw8lD.lykqztF7S9F8szGFR01um.Rg5Svbsg.eMmZ",
-//        does Yahoo do this anymore?
+//        Yahoo discontinued this in 2015
 //        "microsoft": "http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6"
 //        Microsoft is now up to version 8
+        // maybe add AWS?  but it's only free for 3 months
     },
     dependencies = [ "Load", "Placemark" ],
     built_dir = "specRunners/",

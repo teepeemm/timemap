@@ -10,8 +10,8 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-// for JSLint
 /*global TimeMap, TimeMapItem */
+/*jslint es6, this */
 
 /**
  * @class
@@ -100,10 +100,10 @@ TimeMap.loaders.gss = function (options) {
     loader.preload = function (gFourData) {
         var columnHeaders = gFourData.values.shift(),
             data = [];
-        gFourData.values.forEach( (row) => {
+        gFourData.values.forEach( function(row) {
             var rowObj = {};
-            row.forEach( (entry,colIndex) => {
-                rowObj[columnHeaders[colIndex]]=entry
+            row.forEach( function(entry,colIndex) {
+                rowObj[columnHeaders[colIndex]]=entry;
             });
             data.push(rowObj);
         });
@@ -118,14 +118,12 @@ TimeMap.loaders.gss = function (options) {
      * @return {Object} data        Transformed data for one item
      */
     loader.transform = function (data) {
-        var item = {}, params = loader.params, paramName,
+        var item = {}, params = loader.params,
             transform = options.transformFunction;
         // run through parameters, loading each
-        for (paramName in params) {
-            if (params.hasOwnProperty(paramName)) {
-                params[paramName].setConfigGSS(item, data);
-            }
-        }
+        Object.values(params).forEach( function(param) {
+            param.setConfigGSS(item,data);
+        });
         // hook for further transformation
         if (transform) {
             item = transform(item);

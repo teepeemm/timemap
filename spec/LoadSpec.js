@@ -1,7 +1,13 @@
 
-LoadSpec = {};
+/*global spyOn, $, expect, it, describe, mxn, TimeMap, GMarker, google, VEShape,
+ fail, GLatLng, OpenLayers, beforeAll, afterAll */
+/*jslint es6 */
+
+const LoadSpec = {};
 
 LoadSpec.specs = function (setUpPage,dataloader) {
+
+"use strict";
 
 let tm, ds, items;
 
@@ -9,7 +15,7 @@ function setUp() {
     spyOn($,'ajax').and.callFake(dataloader);
     setUpPage();
     tm = LoadSpec.tm;
-    ds = tm.datasets["test"];
+    ds = tm.datasets.test;
     items = ds.getItems();
 }
 
@@ -119,8 +125,8 @@ function itHasCorrectNativePolylinePlacemarks() {
     let points;
     switch (tm.map.api) {
         case "google":
-            expect( 'getVertex' in nativePlacemark ).toBeTrue();
-            expect( 'getVertexCount' in nativePlacemark ).toBeTrue();
+            expect( nativePlacemark.hasOwnProperty('getVertex') ).toBeTrue();
+            expect( nativePlacemark.hasOwnProperty('getVertexCount') ).toBeTrue();
             points = [
                 new GLatLng(45.256, -110.45),
                 new GLatLng(46.46, -109.48),
@@ -168,7 +174,7 @@ function itHasCorrectNativePolylinePlacemarks() {
                 ];
             const nativePoints = nativePlacemark.GetPoints();
             expect( nativePoints.length ).toBe(3);
-            nativePoints.forEach( (point,index) => {
+            nativePoints.forEach( function(point,index) {
                 expect( point.Latitude ).toBe(points[index][0]);
                 expect( point.Longitude ).toBe(points[index][1]);
             });
@@ -178,7 +184,7 @@ function itHasCorrectNativePolylinePlacemarks() {
     }
 }
 
-describe("loadtests", () => {
+describe("loadtests", function() {
     beforeAll(setUp);
     it("has loaded the data", itHasLoadedTheData );
     it("has the correct item properties", itHasTheCorrectItemProperties);
@@ -191,7 +197,7 @@ describe("loadtests", () => {
        itHasCorrectPolylinePlacemarkProperties);
     it("has correct native polyline placemarks",
        itHasCorrectNativePolylinePlacemarks);
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');

@@ -1,5 +1,10 @@
 
+/*global TimeMap, TimeMapTheme, describe, beforeAll, it, afterAll, $ */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 let tm;
 
@@ -123,53 +128,53 @@ function setUp() {
     tm.showDatasets();
 }
 
-describe("themes", () => {
+describe("themes", function() {
     beforeAll(setUp);
-    it("has cascading theme colors", () => {
-        expect( tm.datasets["testA"].getItems()[0].event._color )
+    it("has cascading theme colors", function() {
+        expect( tm.datasets.testA.getItems()[0].event._color )
             .toBe( TimeMap.themes.green.color );
-        expect( tm.datasets["testA"].getItems()[1].event._color )
+        expect( tm.datasets.testA.getItems()[1].event._color )
             .toBe( TimeMap.themes.orange.color );
-        expect( tm.datasets["testB"].getItems()[0].event._color )
+        expect( tm.datasets.testB.getItems()[0].event._color )
             .toBe( TimeMap.themes.blue.color );
-        expect( tm.datasets["testB"].getItems()[1].event._color )
+        expect( tm.datasets.testB.getItems()[1].event._color )
             .toBe( TimeMap.themes.yellow.color );
-        expect( tm.datasets["testC"].getItems()[0].event._color )
+        expect( tm.datasets.testC.getItems()[0].event._color )
             .toBe( TimeMap.themes.purple.color );
-        expect( tm.datasets["testC"].getItems()[2].event._color )
+        expect( tm.datasets.testC.getItems()[2].event._color )
             .toBe( customTheme.color );
     });
-    it("has cascading theme event icons", () => {
-        expect( tm.datasets["testA"].getItems()[0].event._icon.substr(0, 14) )
+    it("has cascading theme event icons", function() {
+        expect( tm.datasets.testA.getItems()[0].event._icon.substr(0, 14) )
             .toBe( '../images/dsA/' );
-        expect( tm.datasets["testA"].getItems()[1].event._icon.substr(0, 15) )
+        expect( tm.datasets.testA.getItems()[1].event._icon.substr(0, 15) )
             .toBe( '../images/dsA2/' );
-        expect( tm.datasets["testB"].getItems()[0].event._icon.substr(0, 10) )
+        expect( tm.datasets.testB.getItems()[0].event._icon.substr(0, 10) )
             .toBe( '../images/' );
-        expect( tm.datasets["testB"].getItems()[1].event._icon.substr(0, 10) )
+        expect( tm.datasets.testB.getItems()[1].event._icon.substr(0, 10) )
             .toBe( '../images/' );
-        expect( tm.datasets["testC"].getItems()[0].event._icon.substr(0, 10) )
+        expect( tm.datasets.testC.getItems()[0].event._icon.substr(0, 10) )
             .toBe( '../images/' );
-        expect( tm.datasets["testC"].getItems()[2].event._icon.substr(0, 10) )
+        expect( tm.datasets.testC.getItems()[2].event._icon.substr(0, 10) )
             .toBe( '../images/' );
     });
-    it("has cascading theme marker icons", () => {
-        expect( tm.datasets["testA"].getItems()[0].placemark.iconUrl )
+    it("has cascading theme marker icons", function() {
+        expect( tm.datasets.testA.getItems()[0].placemark.iconUrl )
             .toBe( TimeMap.themes.green.icon );
-        expect( tm.datasets["testA"].getItems()[1].placemark.iconUrl)
+        expect( tm.datasets.testA.getItems()[1].placemark.iconUrl)
             .toBe( TimeMap.themes.orange.icon );
-        expect( tm.datasets["testB"].getItems()[0].placemark.iconUrl )
+        expect( tm.datasets.testB.getItems()[0].placemark.iconUrl )
             .toBe( TimeMap.themes.blue.icon );
-        expect( tm.datasets["testB"].getItems()[1].placemark.iconUrl)
+        expect( tm.datasets.testB.getItems()[1].placemark.iconUrl)
             .toBe( TimeMap.themes.yellow.icon );
-        expect( tm.datasets["testC"].getItems()[0].placemark.iconUrl )
+        expect( tm.datasets.testC.getItems()[0].placemark.iconUrl )
             .toBe( TimeMap.themes.purple.icon );
-        expect( tm.datasets["testC"].getItems()[1].placemark.iconUrl)
+        expect( tm.datasets.testC.getItems()[1].placemark.iconUrl)
             .toBe( customIcon );
-        expect( tm.datasets["testC"].getItems()[2].placemark.iconUrl)
+        expect( tm.datasets.testC.getItems()[2].placemark.iconUrl)
             .toBe( customTheme.icon );
-    })
-    afterAll( () => {
+    });
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');

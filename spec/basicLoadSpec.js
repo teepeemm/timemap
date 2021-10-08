@@ -1,5 +1,10 @@
 
+/*global TimeMap, LoadSpec, describe */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 function setUpPage() {
     const values = [
@@ -50,7 +55,7 @@ function dataloader() {
     throw '$.ajax should not be called';
 }
 
-describe("basic loading", () => {
+describe("basic loading", function() {
     LoadSpec.specs(setUpPage,dataloader);
 });
 

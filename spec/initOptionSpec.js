@@ -1,5 +1,11 @@
 
+/*global TimeMap, mxn, Timeline, expect, describe, it, beforeAll, afterAll, $,
+ fail */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 let tm, tm2, tm3, tm4;
 
@@ -135,12 +141,12 @@ function expectMapType(timemap, type) {
     expect(mxn.Mapstraction[type]).toBe(timemap.map.getMapType());
 }
 
-describe("initOptions", () => {
+describe("initOptions", function() {
     beforeAll(setUpPage);
     describe("default map type", defaultMapType);
     describe("center and zoom", centerAndZoom);
     describe("timeline bands", timelineBands);
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         tm2.clear();
         tm3.clear();
@@ -151,7 +157,7 @@ describe("initOptions", () => {
 });
 
 function defaultMapType() {
-    it("has the correct map type", () => {
+    it("has the correct map type", function() {
         switch (tm.map.api) {
             case "google":
             case "googlev3":
@@ -167,7 +173,7 @@ function defaultMapType() {
                 fail("Map API not defined, or tests not defined for this API");
         }
     });
-    it("has the correct custom map type", () => {
+    it("has the correct custom map type", function() {
         // this will fail for openlayers right now
         if ( tm2.map.api !== 'openlayers' ) {
             expectMapType(tm2, 'SATELLITE');
@@ -176,7 +182,7 @@ function defaultMapType() {
 }
 
 function centerAndZoom() {
-    it("has the correct auto center and zoom", () => {
+    it("has the correct auto center and zoom", function() {
         const mapZoom = tm.map.getZoom(),
             center = tm.map.getCenter();
         expect( tm.opts.centerOnItems ).toBeTrue();
@@ -186,13 +192,13 @@ function centerAndZoom() {
         expect( center.lat ).toBeCloseTo(41,0);
         expect( center.lon ).toBeCloseTo(12,0);
     });
-    it("has the correct custom center and zoom", () => {
+    it("has the correct custom center and zoom", function() {
         const center2 = tm2.map.getCenter();
         expect( tm2.opts.centerOnItems ).toBeFalse();
         expect( center2.lat ).toBeCloseTo(38,1);
         expect( center2.lon ).toBeCloseTo(-123,1);
     });
-    it("has the correct point center and zoom", () => {
+    it("has the correct point center and zoom", function() {
         const center3 = tm3.map.getCenter();
         expect( tm3.opts.centerOnItems ).toBeFalse();
         expect( center3.lat ).toBeCloseTo(38,1);
@@ -201,20 +207,20 @@ function centerAndZoom() {
 }
 
 function timelineBands() {
-    it("has the correct default bands", () => {
+    it("has the correct default bands", function() {
         expect( tm.timeline.getBandCount() ).toBe(2);
         expect( tm.timeline.getBand(1)._syncWithBand )
             .toBe(tm.timeline.getBand(0));
         expectBandInterval(tm, 0, 'WEEK');
         expectBandInterval(tm, 1, 'MONTH');
     });
-    it("has the correct custom band intervals", () => {
+    it("has the correct custom band intervals", function() {
         expect( tm2.timeline.getBandCount() ).toBe(2);
         expect( tm2.timeline.getBand(1)._syncWithBand ).toBeNull();
         expectBandInterval(tm2, 0, 'DECADE');
         expectBandInterval(tm2, 1, 'CENTURY');
     });
-    it("has the correct custom band info", () => {
+    it("has the correct custom band info", function() {
         expect( tm3.timeline.getBandCount() ).toBe(3);
         expect( tm3.timeline.getBand(1)._syncWithBand )
             .toBe(tm3.timeline.getBand(0));
@@ -225,7 +231,7 @@ function timelineBands() {
         expectBandInterval(tm3, 2, 'CENTURY');
         expect( tm3.timeline.getBand(2).getEventSource() ).toBeNull();
     });
-    it("has the correct hotzones", () => {
+    it("has the correct hotzones", function() {
         expect( tm4.timeline.getBandCount() ).toBe(2);
         expect( tm.timeline.getBand(1)._syncWithBand )
             .toBe(tm.timeline.getBand(0));
@@ -237,4 +243,4 @@ function timelineBands() {
     });
 }
 
-}())
+}());

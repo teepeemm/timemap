@@ -1,26 +1,31 @@
 
+/*global describe, TimeMap, $, expect, beforeAll, spyOn, it, afterAll */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 let tm, ds, items;
 
-describe("kml", () => {
-    beforeAll( () => {
+describe("kml", function() {
+    beforeAll( function() {
         spyOn($,'ajax').and.callFake(dataloader);
         setUpPage();
     });
-    it("has loaded the data", () => {
+    it("has loaded the data", function() {
         expect( $.ajax ).toHaveBeenCalledTimes(1);
         expect( tm ).toBeDefined();
         expect( ds ).toBeDefined();
         expect( items.length ).toBe(8);
     });
-    it("has the expected item properties", () => {
+    it("has the expected item properties", function() {
         expect( items[0].opts.description ).toBe("");
         expect( items[1].opts.Test1 ).toBe("Test 1");
         expect( items[1].opts.foo ).toBe("Test 2");
         expect( items[3].opts.description.length ).toBe(5000);
     });
-    it("has the expected date properties", () => {
+    it("has the expected date properties", function() {
         const item = items[2],
             d = new Date(),
             startDate = item.getStart(),
@@ -30,18 +35,18 @@ describe("kml", () => {
         expect( endDate.getUTCMonth() ).toBe( d.getUTCMonth() );
         expect( endDate.getUTCDate() ).toBe( d.getUTCDate() );
     });
-    it("doesn't inherit sibling properties", () => {
+    it("doesn't inherit sibling properties", function() {
         expectDateToBeCorrect(items[5].getStart());
         expect( items[4].getStart() ).toBeNull();
     });
-    it("can have a folder date", () => {
+    it("can have a folder date", function() {
         expectDateToBeCorrect( items[7].getStart() );
         const startDate = items[6].getStart();
         expect( startDate.getUTCFullYear() ).toBe(1990);
         expect( startDate.getUTCMonth() ).toBe(0);
         expect( startDate.getUTCDate() ).toBe(2);
-    })
-    afterAll( () => {
+    });
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');
@@ -55,7 +60,7 @@ function expectDateToBeCorrect(startDate) {
 }
 
 function setUpPage() {
-    TimeMap.util.nsMap['dc'] = 'http://purl.org/dc/elements/1.1/';
+    TimeMap.util.nsMap.dc = 'http://purl.org/dc/elements/1.1/';
     tm = TimeMap.init({
         mapId: "map",               // Id of map div element (required)
         timelineId: "timeline",     // Id of timeline div element (required) 
@@ -72,7 +77,7 @@ function setUpPage() {
             }
         ]
     });
-    ds = tm.datasets["test"];
+    ds = tm.datasets.test;
     items = ds.getItems();
 }
 

@@ -1,5 +1,10 @@
 
+/*global LoadSpec, TimeMap, describe */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 function setUpPage() {
     LoadSpec.tm = TimeMap.init({
@@ -52,7 +57,7 @@ function dataloader(args) {
     }
 }
 
-describe("jsonp loading", () => {
+describe("jsonp loading", function() {
     LoadSpec.specs(setUpPage,dataloader);
 });
 

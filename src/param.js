@@ -1,7 +1,6 @@
 
-/* global
- TimeMap, $
-*/
+/*global TimeMap, $ */
+/*jslint this */
 
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.
@@ -18,6 +17,8 @@
 
 // save a few bytes
 (function () {
+
+"use strict";
 
 /**
  * @name TimeMap.params
@@ -276,4 +277,4 @@ TimeMap.loaders.base.prototype.params = {
     })
 };
 
-})();
+}());

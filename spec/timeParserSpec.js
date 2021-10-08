@@ -1,23 +1,27 @@
 
+/*jslint es6 */
+
 (function () {
 
-describe("can parse dates and times", () => {
+"use strict";
+
+describe("can parse dates and times", function() {
     beforeAll(setUpPage);
-    it("can parse a combination of ISO8601 and Gregorian", () => {
+    it("can parse a combination of ISO8601 and Gregorian", function() {
         expectISO8601('hybrid');
         expectGregorianYear('hybrid');
         expectTimestamp('hybrid');
         expectNulls('hybrid');
     });
-    it("can parse ISO8601 dates", () => {
+    it("can parse ISO8601 dates", function() {
         expectISO8601('iso8601');
         expectNulls('iso8601');
     });
-    it("can parse a variety of years", () => {
+    it("can parse a variety of years", function() {
         expectGregorianYear('gregorian');
         expectNulls('gregorian');
     });
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');
@@ -51,7 +55,7 @@ function expectTimestamp(dsid) {
 
 function expectGregorianYear(dsid) {
     const items = tm.datasets[dsid].getItems();
-    Object.entries(expectedYear).forEach( ([index,year]) => {
+    Object.entries(expectedYear).forEach( function([index,year]) {
         const event = items[index].event;
         expect( event ).not.toBeNull();
         expect( event.getStart().getUTCFullYear() ).toBe(year);
@@ -60,10 +64,10 @@ function expectGregorianYear(dsid) {
 
 function expectNulls(dsid) {
     const items = tm.datasets[dsid].getItems();
-    items.slice(10,13).forEach( (item) => {
+    items.slice(10,13).forEach( function(item) {
         expect( item.event ).toBeNull();
     });
-    items.slice(22,24).forEach( (item) => {
+    items.slice(22,24).forEach( function(item) {
         expect( item.event ).toBeNull();
     });
 }

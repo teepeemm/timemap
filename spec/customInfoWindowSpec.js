@@ -1,5 +1,10 @@
 
+/*global $, expect, describe, TimeMap, beforeAll, it, afterAll */
+/*jslint es6, this */
+
 (function () {
+
+"use strict";
 
 let tm;
     
@@ -63,10 +68,10 @@ const timeoutInterval = 100,
 function infoWindowOpen(done,attempts) {
     if ( setupTest() ) {
         done();
-    } else if ( maxAttempts < attempts ) {
-        throw 'took too long to set up';
-    } else {
+    } else if ( attempts < maxAttempts ) {
         setTimeout(infoWindowOpen, timeoutInterval, done, attempts+1);
+    } else {
+        throw 'took too long to set up';
     }
 }
 
@@ -80,7 +85,7 @@ function setUpPage() {
 
 function setupTest() {
     // this is effectively the assertion
-    return $('span#custom').length === 1
+    return $('span#custom').length === 1;
 }
 
 function expectNoOpenWindows() {
@@ -94,45 +99,45 @@ function expectNoOpenWindows() {
 
 // I'd like itHasNoOpenWindows to be "beforeEach" and "afterEach" describe,
 // but then it fires in the wrong order from the inner before/after all.
-describe("custom info windows", () => {
+describe("custom info windows", function() {
     beforeAll(setUpPage);
-    describe("info template", () => {
-        beforeAll( (done) => {
+    describe("info template", function() {
+        beforeAll( function(done) {
             expectNoOpenWindows();
-            tm.datasets['test'].getItems()[0].openInfoWindow();
+            tm.datasets.test.getItems()[0].openInfoWindow();
             infoWindowOpen(done,0);
         });
-        it("should have the correct info window", () => {
+        it("should have the correct info window", function() {
             expect( setupTest() ).toBeTrue();
             expect( $('span#custom').text() )
                 .toBe( 'Test Event 1 - Test Description - spam' );
-            tm.datasets['test'].getItems()[0].hidePlacemark();
-            expectNoOpenWindows()
+            tm.datasets.test.getItems()[0].hidePlacemark();
+            expectNoOpenWindows();
         });
     });
-    describe("custom open", () => {
-        it("should open the window", () => {
-            expectNoOpenWindows()
-            tm.datasets['test'].getItems()[1].openInfoWindow();
+    describe("custom open", function() {
+        it("should open the window", function() {
+            expectNoOpenWindows();
+            tm.datasets.test.getItems()[1].openInfoWindow();
             expect( $('div#custom2').length ).toBe(1);
-            tm.datasets['test'].getItems()[1].closeInfoWindow();
-            expectNoOpenWindows()
+            tm.datasets.test.getItems()[1].closeInfoWindow();
+            expectNoOpenWindows();
         });
     });
-    describe("custom info html", () => {
-        it("should have opened the window", () => {
-            expectNoOpenWindows()
-            tm.datasets['test'].getItems()[2].openInfoWindow();
+    describe("custom info html", function() {
+        it("should have opened the window", function() {
+            expectNoOpenWindows();
+            tm.datasets.test.getItems()[2].openInfoWindow();
             expect( $('div#custom3').length ).toBe(1);
             expect( $('div#custom3 div.infotitle').text() )
                 .toBe( dataset.options.items[2].title );
             expect( $('div#custom3 div.infodescription').text() )
                 .toBe( dataset.options.items[2].options.description );
-            tm.datasets['test'].getItems()[2].closeInfoWindow();
-            expectNoOpenWindows()
+            tm.datasets.test.getItems()[2].closeInfoWindow();
+            expectNoOpenWindows();
         });
     });
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');

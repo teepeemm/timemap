@@ -1,5 +1,10 @@
 
+/*global TimeMap, describe, beforeAll, it, expect, afterAll, $ */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 let tm;
 
@@ -33,7 +38,7 @@ function loadWithScrollTo(scrollTo) {
     const loadManager = TimeMap.loadManager;
     loadManager.init(tm, 1, { scrollTo: scrollTo });
     const loader = new TimeMap.loaders.basic({items: items});
-    loader.load(tm.datasets["test"], loadManager.complete.bind(loadManager));
+    loader.load(tm.datasets.test, loadManager.complete.bind(loadManager));
 }
 
 function setUpPage() {
@@ -52,17 +57,17 @@ function setUpPage() {
     });
 }
 
-describe("scroll to desired dates", () => {
+describe("scroll to desired dates", function() {
     beforeAll(setUpPage);
-    it("scrolled to the earliest", () => {
-        loadWithScrollTo('earliest')
+    it("scrolled to the earliest", function() {
+        loadWithScrollTo('earliest');
         expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
             .toBe(1980);
         loadWithScrollTo('first');
         expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
             .toBe(1980);
     });
-    it("scrolled to the latest", () => {
+    it("scrolled to the latest", function() {
         loadWithScrollTo('latest');
         expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
             .toBe(2000);
@@ -70,24 +75,24 @@ describe("scroll to desired dates", () => {
         expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
             .toBe(2000);
     });
-    it("scrolled to a given string date", () => {
+    it("scrolled to a given string date", function() {
         // have to be somewhat loose here because of pixel-to-date conversion
         loadWithScrollTo('1990-01-03');
         expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
             .toBe(1990);
     });
-    it("scrolled to a given Date date", () => {
+    it("scrolled to a given Date date", function() {
         loadWithScrollTo(new Date(1990, 1, 1));
         expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
             .toBe(1990);
-        years.forEach( (year,index) => {
+        years.forEach( function(year,index) {
             expect( tm.getItems()[index] ).toBeDefined();
             tm.getItems()[index].scrollToStart();
             expect( tm.timeline.getBand(0).getCenterVisibleDate().getUTCFullYear() )
                 .toBe( year );
         });
     });
-    afterAll( () => {
+    afterAll( function() {
         tm.clear();
         $('.timelinediv').empty().removeClass().addClass('timelinediv');
         $('.mapdiv').empty().removeAttr('style');

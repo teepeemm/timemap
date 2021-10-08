@@ -1,5 +1,10 @@
 
+/*global PlacemarkSpec, TimeMap, describe */
+/*jslint es6 */
+
 (function () {
+
+"use strict";
 
 const values = [
     { // point
@@ -180,7 +185,7 @@ function setUpPage() {
     PlacemarkSpec.correctMultiplePlacemarkCount = 3; // 4; -- omit overlay until I can make it work
 }
 
-describe("basic placemarks", () => {
+describe("basic placemarks", function() {
     PlacemarkSpec.specs(setUpPage);
 });
 

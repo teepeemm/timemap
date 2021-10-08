@@ -1,7 +1,6 @@
 
-/* global
- TimeMap, mxn
-*/
+/*global TimeMap, mxn, window */
+/*jslint es6, this */
 
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.
@@ -20,6 +19,8 @@
 
 // save a few bytes
 (function () {
+
+"use strict";
 
 /*----------------------------------------------------------------------------
  * State namespace, with setters, serializers, and url functions
@@ -320,4 +321,4 @@ TimeMap.state.params = {
         })
 };
 
-})();
+}());

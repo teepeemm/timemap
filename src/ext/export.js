@@ -1,7 +1,6 @@
 
-/* global
- TimeMap, TimeMapDataset, TimeMapItem
-*/
+/*global TimeMap, TimeMapDataset, TimeMapItem */
+/*jslint es6, this */
 
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.
@@ -44,7 +43,7 @@ TimeMap.prototype.makeOptionData = function () {
         // copy options
         opts = this.opts,
         k, mts=[], mt, x;
-    Object.entries(opts).forEach( ([k,v]) => data[k] = v );
+    Object.entries(opts).forEach( function([k,v]) { data[k] = v; } );
     // clean up: mapCenter
     if (data.mapCenter) {
         data.mapCenter = util.makePoint(data.mapCenter);
@@ -70,14 +69,13 @@ TimeMap.prototype.makeOptionData = function () {
     }
     // including themes here too - might be a TimeMap attribute
     var themes=[], t, id;
-    for (id in this.datasets) {
-        if (this.datasets.hasOwnProperty(id)) {
-            t = util.revHash(TimeMapDataset.themes, this.datasets[id].opts.theme);
-            if (t) {
-                themes.push(t);
-            }
+    this.datasets.forEach( function(dataset) {
+        t = util.revHash(TimeMapDataset.themes, dataset.opts.theme);
+        if (t) {
+            themes.push(t);
         }
-    }
+    });
+    // what is the purpose of themes?  maybe it should be data.themes = themes?
     data.themes = t;
     return data;
 };
@@ -162,8 +160,8 @@ TimeMapItem.prototype.toJSON = function () {
                     break;
                 case "polyline":
                 case "polygon":
-                    var line = [];
-                    for (var x=0; x<pm.getVertexCount(); x++) {
+                    var line = [], x;
+                    for (x=0; x<pm.getVertexCount(); x+=1) {
                         line.push(util.makePoint(pm.getVertex(x)));
                     }
                     pdata[type] = line;
@@ -171,7 +169,7 @@ TimeMapItem.prototype.toJSON = function () {
             }
             return pdata;
         };
-        if (this.getType() == 'array') {
+        if (this.getType() === 'array') {
             data.placemarks = [];
             for (var i=0; i<this.placemark.length; i++) {
                 data.placemarks.push(makePlacemarkJSON(false, this.placemark[i], {}));
@@ -206,7 +204,7 @@ TimeMapItem.prototype.addExportData = function (data) {
  */
 TimeMap.util.revHash = function (map, val) {
     for (var k in map) {
-        if (map[k] == val) {
+        if (map[k] === val) {
             return k;
         }
     }

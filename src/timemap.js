@@ -32,10 +32,8 @@
  * @version 2.1pre
  */
 
-// for jslint
-/* global
- SimileAjax
-*/
+/*global SimileAjax */
+/*jslint es6, this, name */
 
 (function () {
 // borrowing some space-saving devices from jquery
@@ -1727,7 +1725,7 @@ TimeMapItem = function (data, dataset) {
     end = end ? parser(end) : null;
     instant = !end;
     if (start !== null) { 
-        if (util.TimelineVersion() == "1.2") {
+        if (util.TimelineVersion() === "1.2") {
             // attributes by parameter
             event = new eventClass(start, end, null, null,
                 instant, title, null, null, null, eventIcon, theme.eventColor, 
@@ -1798,15 +1796,15 @@ TimeMapItem = function (data, dataset) {
                 x;
             pBounds = new BoundingBox();
             if (line && line.length) {
-                for (x=0; x<line.length; x++) {
+                line.forEach( function(latLon) {
                     point = new LatLonPoint(
-                        parseFloat(line[x].lat), 
-                        parseFloat(line[x].lon)
+                        parseFloat(latLon.lat),
+                        parseFloat(latLon.lon)
                     );
                     points.push(point);
                     // add point to visible map bounds
                     pBounds.extend(point);
-                }
+                });
                 // make polyline or polygon
                 placemark = new Polyline(points);
                 placemark.addData({
@@ -1902,7 +1900,7 @@ TimeMapItem = function (data, dataset) {
         });
         // allow for custom placemark loading
         if (!options.noPlacemarkLoad) {
-            if (util.getPlacemarkType(placemark) == 'marker') {
+            if (util.getPlacemarkType(placemark) === 'marker') {
                 // add placemark to map
                 tm.map.addMarker(placemark);
             } else {
@@ -1919,7 +1917,7 @@ TimeMapItem = function (data, dataset) {
      * @name TimeMapItem#placemark
      * @type Marker|Polyline|Array
      */
-    item.placemark = placemarks.length == 1 ? placemarks[0] :
+    item.placemark = placemarks.length === 1 ? placemarks[0] :
         placemarks.length ? placemarks : 
         null;
     
@@ -2087,7 +2085,7 @@ TimeMapItem.prototype = {
                 }
             };
         if (item.placemark && !item.placemarkVisible) {
-            if (item.getType() == "array") {
+            if (item.getType() === "array") {
                 item.placemark.forEach(f);
             } else {
                 f(item.placemark);
@@ -2108,7 +2106,7 @@ TimeMapItem.prototype = {
                 }
             };
         if (item.placemark && item.placemarkVisible) {
-            if (item.getType() == "array") {
+            if (item.getType() === "array") {
                 item.placemark.forEach(f);
             } else {
                 f(item.placemark);
@@ -2223,7 +2221,7 @@ TimeMapItem.openInfoWindowBasic = function () {
         ds.timemap.scrollToDate(item.getStart());
     }
     // open window
-    if (item.getType() == "marker" && placemark.api) {
+    if (item.getType() === "marker" && placemark.api) {
         placemark.setInfoBubble(html);
         placemark.openBubble();
         // deselect when window is closed
@@ -2264,10 +2262,10 @@ TimeMapItem.openInfoWindowAjax = function () {
  */
 TimeMapItem.closeInfoWindowBasic = function () {
     var item = this;
-    if (item.getType() == "marker") {
+    if (item.getType() === "marker") {
         item.placemark.closeBubble();
     } else {
-        if (item == item.map.tmBubbleItem) {
+        if (item === item.map.tmBubbleItem) {
             item.map.closeBubble();
             item.map.tmBubbleItem = null;
         }
@@ -2337,7 +2335,7 @@ TimeMap.util.makePoint = function (coords, reversed) {
         latlon = [coords.lat(), coords.lng()];
     }
     // array of coordinates
-    if ($.type(coords)=='array') {
+    if ( $.type(coords) === 'array' ) {
         latlon = coords;
     }
     // string
@@ -2375,11 +2373,11 @@ TimeMap.util.makePoint = function (coords, reversed) {
  * @return {Object}             Formated coordinate array
  */
 TimeMap.util.makePoly = function (coords, reversed) {
-    var poly = [], 
+    var poly = [],
         latlon, x,
         coordArr = $.trim(coords).split(/[\r\n\f ]+/);
     // loop through coordinates
-    for (x=0; x<coordArr.length; x++) {
+    for (x=0; x<coordArr.length; x+=1) {
         latlon = (coordArr[x].indexOf(',') > 0) ?
             // comma-separated coordinates (KML-style lon/lat)
             coordArr[x].split(",") :
@@ -2425,7 +2423,7 @@ TimeMap.util.formatDate = function (d, precision) {
             return (yyyy < 1 ? (yyyy * -1 + "BC") : yyyy + "");
         }
         // check for date.js support
-        if (d.toISOString && precision == 3) {
+        if (d.toISOString && precision === 3) {
             return d.toISOString();
         }
         // otherwise, build ISO 8601 string
@@ -2468,8 +2466,8 @@ TimeMap.util.TimelineVersion = function () {
  * @return {String}         Type of placemark, or false if none found
  */
 TimeMap.util.getPlacemarkType = function (pm) {
-    return pm.constructor == Marker ? 'marker' :
-        pm.constructor == Polyline ?
+    return pm.constructor === Marker ? 'marker' :
+        pm.constructor === Polyline ?
             (pm.closed ? 'polygon' : 'polyline') :
         false;
 };
@@ -2483,7 +2481,7 @@ TimeMap.util.getPlacemarkType = function (pm) {
  * @return {Object}             Value, undefined, or key
  */
 TimeMap.util.lookup = function (key, map) {
-    return typeof key == 'string' ? map[key] : key;
+    return typeof key === 'string' ? map[key] : key;
 };
 
 
@@ -2570,7 +2568,7 @@ TimeMap.dateParsers = {
      * @return {Date}       Parsed date or null
      */
     gregorian: function (s) {
-        if (!s || typeof s != "string") {
+        if (!s || typeof s !== "string") {
             return null;
         }
         // look for BC
@@ -2613,13 +2611,13 @@ TimeMap.dateParsers = {
         }
         var parsers = TimeMap.dateParsers,
             // try native date parse and timestamp
-            d = new Date(typeof s == "number" ? s : Date.parse(parsers.fixChromeBug(s)));
+            d = new Date(typeof s === "number" ? s : Date.parse(parsers.fixChromeBug(s)));
         if (isNaN(d)) {
-            if (typeof s == "string") {
+            if (typeof s === "string") {
                 // look for Gregorian dates
                 if (s.match(/^-?\d{1,6} ?(a\.?d\.?|b\.?c\.?e?\.?|c\.?e\.?)?$/i)) {
                     d = parsers.gregorian(s);
-                } 
+                }
                 // try ISO 8601 parse
                 else {
                     try {
@@ -2651,8 +2649,8 @@ TimeMap.dateParsers = {
      * @private
      */
     fixChromeBug: function (s) {
-        return Date.parse("-200") == Date.parse("200") ? 
-            (typeof s == "string" && s.substr(0,1) == "-" ? null : s) :
+        return ( Date.parse("-200") === Date.parse("200") ) ?
+            (typeof s === "string" && s.substr(0,1) === "-" ? null : s) :
             s;
     }
 };
