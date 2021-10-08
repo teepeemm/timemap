@@ -43,25 +43,6 @@ function setUpPage() {
     tm = TimeMap.init(tmOptions);
 }
 
-describe("geoRSS", function() {
-    beforeAll( function() {
-        spyOn($,'ajax').and.callFake(dataloader);
-        setUpPage();
-    });
-    describe("datasets are defined", datasetsDefined);
-    describe("rss loading", rssloading);
-    describe("atom loading", atomloading);
-    describe("mixed loading", mixedloading);
-    describe("mixed KML time", mixedKMLtime);
-    describe("mixed extra tags", mixedExtraTags);
-    afterAll( function() {
-        tm.clear();
-        tm = undefined;
-        $('.timelinediv').empty().removeClass().addClass('timelinediv');
-        $('.mapdiv').empty().removeAttr('style');
-    });
-});
-
 function datasetsDefined() {
     it("has defined the datasets", function() {
         expect( $.ajax ).toHaveBeenCalledTimes(3);
@@ -250,5 +231,24 @@ function dataloader(args) {
         throw 'illegal argument';
     }
 }
+
+describe("geoRSS", function() {
+    beforeAll( function() {
+        spyOn($,'ajax').and.callFake(dataloader);
+        setUpPage();
+    });
+    describe("datasets are defined", datasetsDefined);
+    describe("rss loading", rssloading);
+    describe("atom loading", atomloading);
+    describe("mixed loading", mixedloading);
+    describe("mixed KML time", mixedKMLtime);
+    describe("mixed extra tags", mixedExtraTags);
+    afterAll( function() {
+        tm.clear();
+        tm = undefined;
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
+});
 
 }());

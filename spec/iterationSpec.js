@@ -60,7 +60,7 @@ const datasetA = {
         datasets: [ datasetA, datasetB ]
     };
 
-let eventSource, tm, items, item;
+let eventSource, tm;
 
 function setUp() {
     tm = TimeMap.init(tmOptions);
@@ -68,6 +68,10 @@ function setUp() {
     tm.timeline.getBand(0).setCenterVisibleDate(eSource.getEarliestDate());
     tm.showDatasets();
     eventSource = tm.timeline.getBand(0).getEventSource();
+}
+
+function flagwith(num) {
+    return function (input) { input.flag = num; };
 }
 
 describe("iteration tests", function() {
@@ -127,9 +131,5 @@ describe("iteration tests", function() {
         $('.mapdiv').empty().removeAttr('style');
     });
 });
-
-function flagwith(num) {
-    return function (input) { input.flag = num; };
-}
 
 }());

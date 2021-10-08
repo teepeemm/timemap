@@ -61,16 +61,16 @@ function setUpPage() {
     tm.setSelected(undefined);
 }
 
+function expectNotSelected(item) {
+    expect( tm.getSelected() ).not.toBe(item);
+    expect( item.isSelected() ).toBeFalse();
+}
+
 function expectSelected(chosenItem) {
     expect( tm.getSelected() ).toBe(chosenItem);
     expect( chosenItem.isSelected() ).toBeTrue();
     tm.datasets.test.getItems().filter( (item) => chosenItem!==item )
         .forEach( expectNotSelected );
-}
-
-function expectNotSelected(item) {
-    expect( tm.getSelected() ).not.toBe(item);
-    expect( item.isSelected() ).toBeFalse();
 }
 
 function expectNoSelection() {

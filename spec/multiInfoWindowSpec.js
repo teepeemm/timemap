@@ -52,15 +52,10 @@ function setUpPage() {
     });
 }
 
-// we need some delay or Google maps v3 won't close windows
-function openItem(x,done) {
-    const item = tm.datasets.test.getItems()[x];
-    if (item) {
-        item.openInfoWindow();
-        setTimeout(openItem, 150, x+1, done);
-    } else {
-        testLastWindowOpen(done,0);
-    }
+function lastWindowOpen() {
+    // this is effectively the assertion
+    return $('div.infotitle, div.infodescription').length === 2 &&
+        $('div.infotitle').text() === 'Test Event 3';
 }
 
 function testLastWindowOpen(done,attempts) {
@@ -73,10 +68,15 @@ function testLastWindowOpen(done,attempts) {
     }
 }
 
-function lastWindowOpen() {
-    // this is effectively the assertion
-    return $('div.infotitle, div.infodescription').length === 2 &&
-        $('div.infotitle').text() === 'Test Event 3';
+// we need some delay or Google maps v3 won't close windows
+function openItem(x,done) {
+    const item = tm.datasets.test.getItems()[x];
+    if (item) {
+        item.openInfoWindow();
+        setTimeout(openItem, 150, x+1, done);
+    } else {
+        testLastWindowOpen(done,0);
+    }
 }
 
 function expectNoWindowsOpen() {

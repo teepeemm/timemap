@@ -1,5 +1,5 @@
 
-/*global TimeMap, TimeMapTheme, describe, beforeAll, it, afterAll, $ */
+/*global TimeMap, TimeMapTheme, describe, beforeAll, it, afterAll, $, expect */
 /*jslint es6 */
 
 (function () {

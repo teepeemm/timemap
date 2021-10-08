@@ -82,17 +82,6 @@ function setUpPage() {
     tm.showDatasets();
 }
 
-describe("deletion and clearing", function() {
-    beforeEach(setUpPage);
-    describe("deletion", deletion);
-    describe("clearing", clearing);
-    afterAll( function() {
-        tm.clear();
-        $('.timelinediv').empty().removeClass().addClass('timelinediv');
-        $('.mapdiv').empty().removeAttr('style');
-    });
-});
-
 function deletion() {
     it("has the right number of items", function() {
         expect( tm.datasets.testA.getItems().length )
@@ -148,5 +137,16 @@ function clearing() {
             .toBe(0);
     });
 }
+
+describe("deletion and clearing", function() {
+    beforeEach(setUpPage);
+    describe("deletion", deletion);
+    describe("clearing", clearing);
+    afterAll( function() {
+        tm.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
+});
 
 }());

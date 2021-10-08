@@ -3,6 +3,9 @@
  * Licensed under the MIT License (see LICENSE.txt)
  */
 
+/*globals TimeMap, $ */
+/*jslint this */
+
 /**
  * @fileOverview
  * KML Loader
@@ -10,8 +13,9 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-/*globals TimeMap, $ */
-/*jslint this */
+(function() {
+
+"use strict";
 
 /**
  * @class
@@ -215,3 +219,5 @@ TimeMap.params.ExtendedDataParam = function (paramName, tagName) {
 
     });
 };
+
+}());

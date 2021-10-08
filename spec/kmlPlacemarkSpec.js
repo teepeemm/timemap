@@ -6,27 +6,6 @@
 
 "use strict";
 
-function setUpPage() {
-    spyOn($,'ajax').and.callFake(dataloader);
-    PlacemarkSpec.tm = TimeMap.init({
-        mapId: "map",               // Id of map div element (required)
-        timelineId: "timeline",     // Id of timeline div element (required)
-        datasets: [
-            {
-                title: "Test Dataset: KML",
-                id: "test",
-                type: "kml",
-                options: { url: "data/placemarks.kml" }
-            }
-        ]
-    });
-    PlacemarkSpec.correctMultiplePlacemarkCount = 3; // no overlay possible in KML
-}
-
-describe("kml placemarks", function() {
-    PlacemarkSpec.specs(setUpPage);
-});
-
 function dataloader(args) {
     if ( args.url.indexOf("data/placemarks.kml") >= 0 ) {
         args.success(`<?xml version="1.0" encoding="UTF-8"?>
@@ -131,5 +110,26 @@ function dataloader(args) {
         throw 'illegal argument exception';
     }
 }
+
+function setUpPage() {
+    spyOn($,'ajax').and.callFake(dataloader);
+    PlacemarkSpec.tm = TimeMap.init({
+        mapId: "map",               // Id of map div element (required)
+        timelineId: "timeline",     // Id of timeline div element (required)
+        datasets: [
+            {
+                title: "Test Dataset: KML",
+                id: "test",
+                type: "kml",
+                options: { url: "data/placemarks.kml" }
+            }
+        ]
+    });
+    PlacemarkSpec.correctMultiplePlacemarkCount = 3; // no overlay possible in KML
+}
+
+describe("kml placemarks", function() {
+    PlacemarkSpec.specs(setUpPage);
+});
 
 }());

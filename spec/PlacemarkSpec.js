@@ -10,6 +10,17 @@ PlacemarkSpec.specs = function (setUpPage) {
 
 let tm, ds, items, correctMultiplePlacemarkCount;
 
+function setUp() {
+    setUpPage();
+    tm = PlacemarkSpec.tm;
+    ds = tm.datasets.test;
+    items = ds.getItems();
+    const eventSource = tm.timeline.getBand(0).getEventSource();
+    tm.timeline.getBand(0).setCenterVisibleDate(eventSource.getEarliestDate());
+    tm.showDatasets();
+    correctMultiplePlacemarkCount = PlacemarkSpec.correctMultiplePlacemarkCount;
+}
+
 describe("placemarks", function() {
     beforeAll(setUp);
     it("has the correct number of items", function() {
@@ -48,16 +59,5 @@ describe("placemarks", function() {
         $('.mapdiv').empty().removeAttr('style');
     });
 });
-
-function setUp() {
-    setUpPage();
-    tm = PlacemarkSpec.tm;
-    ds = tm.datasets.test;
-    items = ds.getItems();
-    const eventSource = tm.timeline.getBand(0).getEventSource();
-    tm.timeline.getBand(0).setCenterVisibleDate(eventSource.getEarliestDate());
-    tm.showDatasets();
-    correctMultiplePlacemarkCount = PlacemarkSpec.correctMultiplePlacemarkCount;
-}
 
 };

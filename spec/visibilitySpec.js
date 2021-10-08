@@ -11,12 +11,6 @@ const parser = Timeline.DateTime.parseIso8601DateTime;
 
 let tm, ds, item, placemark, eventSource;
 
-function expectItemVisible(flag) {
-    expect( item.visible ).toBe(flag);
-    expectEventVisible(flag);
-    expectPlacemarkVisible(flag);
-}
-
 function expectPlacemarkVisible(flag) {
     expect( placemark ).toBeDefined();
     expect( placemark.isHidden() ).toBe(!flag);
@@ -30,6 +24,12 @@ function expectEventVisible(flag) {
     expect( item.eventVisible ).toBe(flag);
 }
 
+function expectItemVisible(flag) {
+    expect( item.visible ).toBe(flag);
+    expectEventVisible(flag);
+    expectPlacemarkVisible(flag);
+}
+
 function expectDatasetVisible(flag) {
     expect( ds.visible ).toBe(flag);
     expectPlacemarkVisible(flag);
@@ -41,6 +41,44 @@ function expectAllVisible(flag) {
     expectPlacemarkVisible(flag);
     expectEventVisible(flag);
     expectDatasetVisible(flag);
+}
+
+function setUpPage() {
+    tm = TimeMap.init({
+        mapId: "map",               // Id of map div element (required)
+        timelineId: "timeline",     // Id of timeline div element (required) 
+        datasets: [
+            {
+                title: "Test Dataset",
+                id: "test",
+                type: "basic",
+                options: {
+                    items: [
+                        {
+                            "start" : "1980-01-02",
+                            "end" : "1990-01-02",
+                            "point" : {
+                                "lat" : 40.0,
+                                "lon" : 12.0
+                            },
+                            "title" : "Test Event",
+                            "options" : { "description": "Test Description" }
+                        }
+                    ]
+                }
+            }
+        ]
+    });
+}
+
+function setUp() {
+    setUpPage();
+    eventSource = tm.timeline.getBand(0).getEventSource();
+    tm.timeline.getBand(0).setCenterVisibleDate(eventSource.getEarliestDate());
+    tm.showDatasets();
+    ds = tm.datasets.test;
+    item = ds.getItems()[0];
+    placemark = item.placemark;
 }
 
 describe("visibility", function() {
@@ -98,43 +136,5 @@ describe("visibility", function() {
         $('.mapdiv').empty().removeAttr('style');
     });
 });
-
-function setUpPage() {
-    tm = TimeMap.init({
-        mapId: "map",               // Id of map div element (required)
-        timelineId: "timeline",     // Id of timeline div element (required) 
-        datasets: [
-            {
-                title: "Test Dataset",
-                id: "test",
-                type: "basic",
-                options: {
-                    items: [
-                        {
-                            "start" : "1980-01-02",
-                            "end" : "1990-01-02",
-                            "point" : {
-                                "lat" : 40.0,
-                                "lon" : 12.0
-                            },
-                            "title" : "Test Event",
-                            "options" : { "description": "Test Description" }
-                        }
-                    ]
-                }
-            }
-        ]
-    });
-}
-
-function setUp() {
-    setUpPage();
-    eventSource = tm.timeline.getBand(0).getEventSource();
-    tm.timeline.getBand(0).setCenterVisibleDate(eventSource.getEarliestDate());
-    tm.showDatasets();
-    ds = tm.datasets.test;
-    item = ds.getItems()[0];
-    placemark = item.placemark;
-}
 
 }());

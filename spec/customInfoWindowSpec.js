@@ -65,6 +65,11 @@ const timeoutInterval = 100,
         options: { items: items }
     };
 
+function setupTest() {
+    // this is effectively the assertion
+    return $('span#custom').length === 1;
+}
+
 function infoWindowOpen(done,attempts) {
     if ( setupTest() ) {
         done();
@@ -81,11 +86,6 @@ function setUpPage() {
         timelineId: "timeline",     // Id of timeline div element (required)
         datasets: [ dataset ]
     });
-}
-
-function setupTest() {
-    // this is effectively the assertion
-    return $('span#custom').length === 1;
 }
 
 function expectNoOpenWindows() {

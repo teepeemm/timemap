@@ -13,6 +13,9 @@
 /*global TimeMap */
 
 (function () {
+
+    "use strict";
+
     var loaders = TimeMap.loaders;
 
 /**

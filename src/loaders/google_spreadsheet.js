@@ -74,7 +74,7 @@ TimeMap.init({
  */
 TimeMap.loaders.gss = function (options) {
     var loader = new TimeMap.loaders.jsonp(options),
-        params = loader.params, paramName, x,
+        params = loader.params,
         setParamField = TimeMap.loaders.gss.setParamField,
         paramMap = options.paramMap || {},
         extraColumns = options.extraColumns || [];
@@ -126,7 +126,9 @@ TimeMap.loaders.gss = function (options) {
     loader.transform = function (data) {
         var item = {}, params = loader.params,
             transform = options.transformFunction;
-        // run through parameters, loading each
+        // this is the same params assignment as above
+        // but extra columns may have changed params in the meantime
+        // but it wouldn't have changed loader.params
         Object.values(params).forEach( function(param) {
             param.setConfigGSS(item,data);
         });
@@ -151,7 +153,7 @@ TimeMap.loaders.gss.setParamField = function (param, fieldName) {
     var getField = function (data, fieldName) {
         // get element, converting field name to GSS format
         var el = data[fieldName];
-        return el ? el : null;
+        return el || null;
     };
     // set the method on the parameter
     param.setConfigGSS = function (config, data) {

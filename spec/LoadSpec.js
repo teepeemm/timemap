@@ -26,6 +26,12 @@ function itHasLoadedTheData() {
     expect( ds.eventSource.getCount() ).toBe(2);
 }
 
+function expectDateToMatch(d,year) {
+    expect( d.getUTCFullYear() ).toBe(year);
+    expect( d.getUTCMonth() ).toBe(0);
+    expect( d.getUTCDate() ).toBe(2);
+}
+
 function itHasTheCorrectItemProperties() {
     expectDateToMatch( ds.eventSource.getEarliestDate() , 1980 );
     expectDateToMatch( ds.eventSource.getLatestDate() , 2000 );
@@ -209,11 +215,5 @@ describe("loadtests", function() {
         $('.mapdiv').empty().removeAttr('style');
     });
 });
-
-function expectDateToMatch(d,year) {
-    expect( d.getUTCFullYear() ).toBe(year);
-    expect( d.getUTCMonth() ).toBe(0);
-    expect( d.getUTCDate() ).toBe(2);
-}
 
 };

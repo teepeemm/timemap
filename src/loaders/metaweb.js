@@ -3,6 +3,8 @@
  * Licensed under the MIT License (see LICENSE.txt)
  */
 
+/*global TimeMap */
+
 /**
  * @fileOverview
  * Metaweb Loader
@@ -10,8 +12,9 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-// for JSLint
-/*global TimeMap */
+(function() {
+
+"use strict";
 
 /**
  * @class
@@ -94,3 +97,5 @@ TimeMap.loaders.metaweb = function (options) {
 
     return loader;
 };
+
+}());

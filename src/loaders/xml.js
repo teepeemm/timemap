@@ -3,6 +3,8 @@
  * Licensed under the MIT License (see LICENSE.txt)
  */
 
+/*globals TimeMap, $, ActiveXObject */
+
 /**
  * @fileOverview
  * XML Loader
@@ -10,7 +12,9 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-/*globals TimeMap, $, ActiveXObject */
+(function() {
+
+"use strict";
 
  /**
  * @class
@@ -30,8 +34,8 @@
 TimeMap.loaders.xml = function (options) {
     var loader = new TimeMap.loaders.remote(options),
         tagMap = options.tagMap || {},
-        extraTags = options.extraTags || [],
-        params = loader.params;
+        extraTags = options.extraTags || [];
+//        params = loader.params;
 
     /**
      * Load function for remote XML files.
@@ -99,3 +103,5 @@ TimeMap.loaders.xml = function (options) {
 
     return loader;
 };
+
+}());

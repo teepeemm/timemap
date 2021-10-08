@@ -3,6 +3,8 @@
  * Licensed under the MIT License (see LICENSE.txt)
  */
 
+/*global TimeMap */
+
 /**
  * @fileOverview
  * Progressive loader
@@ -10,8 +12,9 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
-// for JSLint
-/*global TimeMap */
+(function() {
+
+"use strict";
 
 /**
  * @class
@@ -187,3 +190,5 @@ TimeMap.loaders.progressive = function (options) {
 
     return loader;
 };
+
+}());

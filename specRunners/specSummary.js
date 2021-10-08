@@ -2,6 +2,8 @@
 /*global jsApiReporter, $, jasmine, window */
 /*jslint es6 */
 
+(function() {
+
 "use strict";
 
 function getJasmineSummary() {
@@ -50,3 +52,5 @@ function jasmineTimemapComplete(jasmineSummary) {
 if ( window.parent === window ) {
     window.addEventListener('message',jasmineTimemapComplete);
 }
+
+}());

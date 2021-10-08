@@ -44,14 +44,13 @@ var paramNS = TimeMap.params,
      * @return {Object}             Object with state config settings
      */
     fromUrl: function () {
-        var pairs = location.hash.substring(1).split('&'),
+        const pairs = location.hash.substring(1).split('&'),
             params = stateNS.params,
             state = {};
         pairs.forEach(function (pair) {
-            var kv = pair.split('='),
-                key;
+            const kv = pair.split('=');
             if (kv.length > 1) {
-                key = kv[0];
+                const key = kv[0];
                 if (key && params[key]) {
                     state[key] = params[key].fromString(decodeURI(kv[1]));
                 }
@@ -67,16 +66,11 @@ var paramNS = TimeMap.params,
      * @return {String}             Parameter string in URL param format
      */
     toParamString: function (state) {
-        var params = stateNS.params,
-            paramArray = [],
-            key;
-        // go through each key in state
-        Object.entries(state).forEach( function( [key,value] ) {
-            if (params[key]) {
-                paramArray.push(key + "="
-                                + encodeURI(params[key].toString(value)));
-            }
-        });
+        const params = stateNS.params,
+            paramArray = Object.entries(state)
+                .filter( ([key,value]) => params[key] )
+                .map( ([key,value]) =>
+                      key + "=" + encodeURI(params[key].toString(value)) );
         return paramArray.join("&");
     },
 
@@ -87,7 +81,7 @@ var paramNS = TimeMap.params,
      * @return {String}             Full URL with parameters
      */
     toUrl: function (state) {
-        var paramString = stateNS.toParamString(state),
+        const paramString = stateNS.toParamString(state),
             url = location.href.split("#")[0];
         return url + "#" + paramString;
     },
@@ -100,8 +94,7 @@ var paramNS = TimeMap.params,
      * @param {Object} state        Object with state config settings
      */
     setConfig: function (config, state) {
-        var params = stateNS.params,
-            key;
+        const params = stateNS.params;
         Object.entries(state).forEach( function ([key,value]) {
             if (params[key]) {
                 params[key].setConfig(config, value);
@@ -145,8 +138,7 @@ var paramNS = TimeMap.params,
  * @param {Object} state    Object with state config settings
  */
 TimeMap.prototype.setState = function (state) {
-    var params = stateNS.params,
-        key;
+    var params = stateNS.params;
     // go through each key in state
     Object.entries(state).forEach( function ([key,value]) {
         if (params[key]) {
@@ -163,8 +155,7 @@ TimeMap.prototype.setState = function (state) {
  */
 TimeMap.prototype.getState = function () {
     var state = {},
-        params = stateNS.params,
-        key;
+        params = stateNS.params;
     // run through params, adding values to state
     Object.entries(params).forEach( function ([key,value]) {
         // get state value

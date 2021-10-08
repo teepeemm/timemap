@@ -6,7 +6,7 @@
 
 "use strict";
 
-let tm, success;
+let tm;
     
 const timeoutInterval = 100,
     maxAttempts = 30,
@@ -36,9 +36,9 @@ function setUpPage() {
     });
 }
 
-function openWindow(done) {
-    tm.datasets.test.getItems()[0].openInfoWindow();
-    testWindowOpen(done,0);
+function windowIsOpen() {
+    // this is effectively the assertion
+    return $('div.infotitle, div.infodescription').length === 2;
 }
 
 function testWindowOpen(done,attempts) {
@@ -51,9 +51,9 @@ function testWindowOpen(done,attempts) {
     }
 }
 
-function windowIsOpen() {
-    // this is effectively the assertion
-    return $('div.infotitle, div.infodescription').length === 2;
+function openWindow(done) {
+    tm.datasets.test.getItems()[0].openInfoWindow();
+    testWindowOpen(done,0);
 }
 
 function expectNoWindowsOpen() {

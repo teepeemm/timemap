@@ -141,21 +141,6 @@ function expectMapType(timemap, type) {
     expect(mxn.Mapstraction[type]).toBe(timemap.map.getMapType());
 }
 
-describe("initOptions", function() {
-    beforeAll(setUpPage);
-    describe("default map type", defaultMapType);
-    describe("center and zoom", centerAndZoom);
-    describe("timeline bands", timelineBands);
-    afterAll( function() {
-        tm.clear();
-        tm2.clear();
-        tm3.clear();
-        tm4.clear();
-        $('.timelinediv').empty().removeClass().addClass('timelinediv');
-        $('.mapdiv').empty().removeAttr('style');
-    });
-});
-
 function defaultMapType() {
     it("has the correct map type", function() {
         switch (tm.map.api) {
@@ -242,5 +227,20 @@ function timelineBands() {
         expect( tm4.timeline.getBand(0).getEventSource) .toBe(tm4.timeline.getBand(1).getEventSource);
     });
 }
+
+describe("initOptions", function() {
+    beforeAll(setUpPage);
+    describe("default map type", defaultMapType);
+    describe("center and zoom", centerAndZoom);
+    describe("timeline bands", timelineBands);
+    afterAll( function() {
+        tm.clear();
+        tm2.clear();
+        tm3.clear();
+        tm4.clear();
+        $('.timelinediv').empty().removeClass().addClass('timelinediv');
+        $('.mapdiv').empty().removeAttr('style');
+    });
+});
 
 }());

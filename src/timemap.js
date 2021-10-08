@@ -880,10 +880,8 @@ TimeMap.loaders = {
      * Cancel all current load requests.
      */
     cancelAll: function () {
-        var loaderNS = TimeMap.loaders,
-            namespace = loaderNS.cb,
-            callbackName;
-        Object.keys(namespace).forEach(loaderNS.cancel.bind(loaderNS));
+        const loaderNS = TimeMap.loaders;
+        Object.keys(loaderNS.cb).forEach(loaderNS.cancel.bind(loaderNS));
     },
     
     /**
@@ -1387,7 +1385,7 @@ TimeMapDataset.prototype = {
     getItems: function (index) {
         var items = this.items;
         return index === undefined ? items : 
-            index in items ? items[index] : null;
+            ( items[index] ? items[index] : null );
     },
     
     /**
@@ -1590,8 +1588,7 @@ TimeMapTheme.create = function (theme, options) {
     }
     if (options) {
         // see if we need to clone - guessing fewer keys in options
-        var key,
-            clone = Object.keys(options).some( (key) => theme.hasOwnProperty(key) ) ? {} : false;
+        var clone = Object.keys(options).some( (key) => theme.hasOwnProperty(key) ) ? {} : false;
         // clone if necessary
         if (clone) {
             Object.entries(theme).forEach( function ([k,v]) {
@@ -1791,9 +1788,8 @@ TimeMapItem = function (data, dataset) {
         // polyline and polygon placemarks
         else if (pdata.polyline || pdata.polygon) {
             var points = [],
-                isPolygon = "polygon" in pdata,
-                line = pdata.polyline || pdata.polygon,
-                x;
+                isPolygon = pdata.polygon,
+                line = pdata.polyline || pdata.polygon;
             pBounds = new BoundingBox();
             if (line && line.length) {
                 line.forEach( function(latLon) {
@@ -1823,7 +1819,7 @@ TimeMapItem = function (data, dataset) {
             }
         } 
         // ground overlay placemark
-        else if ("overlay" in pdata) {
+        else if (pdata.overlay) {
             var sw = new LatLonPoint(
                     parseFloat(pdata.overlay.south), 
                     parseFloat(pdata.overlay.west)
@@ -1850,12 +1846,12 @@ TimeMapItem = function (data, dataset) {
     // Create placemark or placemarks
     
     // Create array of placemark data
-    if ("placemarks" in data) {
+    if (data.placemarks) {
         pdataArr = data.placemarks;
     } else {
         // we have one or more single placemarks
         ["point", "polyline", "polygon", "overlay"].forEach(function (type) {
-            if (type in data) {
+            if (data[type]) {
                 // push placemarks into array
                 pdata = {};
                 pdata[type] = data[type];
@@ -2622,7 +2618,7 @@ TimeMap.dateParsers = {
                 else {
                     try {
                         d = parsers.iso8601(s);
-                    } catch(e) {
+                    } catch(ignore) {
                         d = null;
                     }
                 }
