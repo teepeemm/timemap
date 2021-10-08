@@ -15,6 +15,10 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
+(function() {
+
+"use strict";
+
 /**
  * @class
  * GeoRSS loader: Load GeoRSS feeds.
@@ -208,7 +212,9 @@ TimeMap.loaders.georss.parse = function (node) {
     // clean up
     node = null;
     placemarks = null;
-    pm = null
+    pm = null;
     nList = null;
     return items;
 };
+
+}());

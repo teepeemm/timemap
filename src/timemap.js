@@ -3,6 +3,9 @@
  * Licensed under the MIT License (see LICENSE.txt)
  */
 
+/*global SimileAjax */
+/*jslint es6, this */
+
 /**
  * @overview
  *
@@ -31,9 +34,6 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  * @version 2.1pre
  */
-
-/*global SimileAjax */
-/*jslint es6, this, name */
 
 (function () {
 // borrowing some space-saving devices from jquery
@@ -2650,7 +2650,7 @@ TimeMap.dateParsers = {
      */
     fixChromeBug: function (s) {
         return ( Date.parse("-200") === Date.parse("200") ) ?
-            (typeof s === "string" && s.substr(0,1) === "-" ? null : s) :
+            ( (typeof s === "string" && s.substr(0,1) === "-") ? null : s ) :
             s;
     }
 };

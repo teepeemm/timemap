@@ -108,6 +108,9 @@ function itHasCorrectPolylinePlacemarkProperties() {
         ];
     expect( item.placemark ).not.toBeNull();
     expect( item.placemark ).toBeDefined();
+    if ( LoadSpec.usingGSS ) {
+        return; // how can/should GSS define a polyline?
+    }
     expect( item.getType() ).toBe("polyline");
     expect( TimeMap.util.getPlacemarkType(item.placemark) ).toBe("polyline");
     expect( item.placemark.points ).toBeDefined();
@@ -122,6 +125,9 @@ function itHasCorrectNativePolylinePlacemarks() {
         nativePlacemark = item.getNativePlacemark();
     expect( nativePlacemark ).not.toBeNull();
     expect( nativePlacemark ).toBeDefined();
+    if ( LoadSpec.usingGSS ) {
+        return; // how can/should GSS define a polyline?
+    }
     let points;
     switch (tm.map.api) {
         case "google":

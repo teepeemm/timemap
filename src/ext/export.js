@@ -22,6 +22,10 @@
  * @author Nick Rabinowitz (www.nickrabinowitz.com)
  */
 
+(function() {
+
+"use strict";
+
 /**
  * Clean up TimeMap into a nice object for serialization
  * This is called automatically by the JSON.stringify() function
@@ -75,7 +79,8 @@ TimeMap.prototype.makeOptionData = function () {
             themes.push(t);
         }
     });
-    // what is the purpose of themes?  maybe it should be data.themes = themes?
+    // Tim: what is the purpose of themes?
+    // maybe it should be data.themes = themes?
     data.themes = t;
     return data;
 };
@@ -170,10 +175,7 @@ TimeMapItem.prototype.toJSON = function () {
             return pdata;
         };
         if (this.getType() === 'array') {
-            data.placemarks = [];
-            for (var i=0; i<this.placemark.length; i++) {
-                data.placemarks.push(makePlacemarkJSON(false, this.placemark[i], {}));
-            }
+            data.placemarks = this.placemark.map( (p) => makePlacemarkJSON(false,p,{}) );
         } else {
             data = makePlacemarkJSON(this.getType(), this.placemark, data);
         }
@@ -203,11 +205,12 @@ TimeMapItem.prototype.addExportData = function (data) {
  * @return {String}         Key if found, null if not
  */
 TimeMap.util.revHash = function (map, val) {
-    for (var k in map) {
-        if (map[k] === val) {
-            return k;
-        }
+    const entry = Object.entries(map).find( ([k, v]) => v===val );
+    if ( entry ) {
+        return entry[0];
+    } else {
+        return null;
     }
-    // nothing found
-    return null;
 };
+
+}());

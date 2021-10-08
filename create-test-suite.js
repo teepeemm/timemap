@@ -3,7 +3,7 @@ const
     fs = require('fs'),
     path = require('path'),
     test_names = [
-        "basicLoad","jsonLoad","jsonpLoad","kmlLoad",
+        "basicLoad","gssLoad","jsonLoad","jsonpLoad","kmlLoad",
         "basicPlacemark","kmlPlacemark",
         "basicInfoWindow","customInfoWindow","multiInfoWindow",
         "initOption","selection",

@@ -1,7 +1,9 @@
 
-/*global
- TimeMapTheme, $
-*/
+/*global TimeMapTheme, $ */
+
+(function() {
+
+"use strict";
 
 /**
  * Create the URL for a Google Charts circle image.
@@ -42,3 +44,5 @@ TimeMapTheme.createCircleTheme = function (opts) {
         color: opts.color
     });
 };
+
+}());

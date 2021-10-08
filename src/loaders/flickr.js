@@ -13,6 +13,10 @@
 // for JSLint
 /*global TimeMap */
 
+(function() {
+
+"use strict";
+
 /**
  * @class
  * Flickr loader: Load JSONP data from Flickr. 
@@ -93,3 +97,5 @@ TimeMap.loaders.flickr = function (options) {
 
     return loader;
 };
+
+}());

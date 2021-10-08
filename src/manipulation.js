@@ -1,6 +1,6 @@
 
 /*global Timeline */
-/*jslint es6, this, name */
+/*jslint es6, this */
 
 /*
  * Timemap.js Copyright 2010 Nick Rabinowitz.

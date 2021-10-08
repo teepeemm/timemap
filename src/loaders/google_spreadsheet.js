@@ -13,21 +13,23 @@
 /*global TimeMap, TimeMapItem */
 /*jslint es6, this */
 
+(function() {
+
+"use strict";
+
 /**
  * @class
  * Google Spreadsheet loader.
  *
- * <p>This is a loader for data from Google Spreadsheets. The constructor takes an optional map
+ * <p>This is a loader for data from Google Spreadsheets version 4
+ * (not the map api version). The constructor takes an optional map
  * to indicate which columns contain which data elements; the default column
  * names (case-insensitive) are: title, description, start, end, lat, lon</p>
  * 
- * <p>See <a href="https://code.google.com/apis/spreadsheets/docs/2.0/reference.html#gsx_reference">https://code.google.com/apis/spreadsheets/docs/2.0/reference.html#gsx_reference</a>
- * for details on how spreadsheet column ids are derived. Note that date fields 
- * must be in yyyy-mm-dd format - you may need to set the cell format as "plain text" 
- * in the spreadsheet (Google's automatic date formatting won't work).</p>
- *
- * <p>The loader takes either a full URL, minus the JSONP callback function, or 
- * just the spreadsheet key. Note that the spreadsheet must be published.</p>
+ * <p>The loader takes either a full URL, minus the JSONP callback function, or
+ * the spreadsheet key id, the sheet name, and the sheets api key
+ * (see https://developers.google.com/sheets/api/guides/authorizing#APIKey for
+ * that last item). Note that the spreadsheet must be published.</p>
  *
  * @augments TimeMap.loaders.jsonp
  * @requires param.js
@@ -37,17 +39,19 @@
 TimeMap.init({
     datasets: [
         {
-            title: "Google Spreadsheet by key",
+            title: "Google Spreadsheet by key and id",
             type: "gss",
             options: {
-                key: "pjUcDAp-oNIOjmx3LCxT4XA" // Spreadsheet key
+                sheetsid: "user-supplied-sheet-id",
+                apikey: "user-supplied-api-key",
+                sheetname: "user-supplied-sheet-name"
             }
         },
         {
             title: "Google Spreadsheet by url",
             type: "gss",
             options: {
-                url: "https://spreadsheets.google.com/feeds/list/pjUcDAp-oNIOjmx3LCxT4XA/1/public/values?alt=json-in-script&callback="
+                url: "https://sheets.googleapis.com/v4/spreadsheets/user-supplied-sheet-id/values/user-supplied-sheet-name?alt=json&key=user-supplied-api-key&callback=?"
             }
         }
     ],
@@ -57,14 +61,16 @@ TimeMap.init({
  * @see <a href="../../examples/google_spreadsheet_columns.html">Google Spreadsheet Example, Arbitrary Columns</a>
  *
  * @param {Object} options          All options for the loader:
- * @param {String} options.key                      Key of spreadsheet to load, or
- * @param {String} options.url                      Full JSONP url of spreadsheet to load
- * @param {Object} [options.paramMap]               Map of paramName:columnName pairs for core parameters, 
- *                                                  if using non-standard column names; see keys in 
-*                                                   {@link TimeMap.loaders.base#params} for the standard param names
- * @param {String[]} [options.extraColumns]         Array of additional columns to load; all named columns will be 
- *                                                  loaded into the item.opts object.
- * @param {mixed} [options[...]]    Other options (see {@link TimeMap.loaders.jsonp})
+ * @param {String} options.sheetsid          Sheets id
+ * @param {String} options.apikey            Key of spreadsheet to load
+ * @param {String} options.sheetname         Name of sheet to load
+ * @param {String} options.url               Full JSONP url of spreadsheet to load
+ * @param {Object} [options.paramMap]        Map of paramName:columnName pairs for core parameters,
+ *                                           if using non-standard column names; see keys in
+ *                                           {@link TimeMap.loaders.base#params} for the standard param names
+ * @param {String[]} [options.extraColumns]  Array of additional columns to load; all named columns will be
+ *                                           loaded into the item.opts object.
+ * @param {mixed} [options[...]]             Other options (see {@link TimeMap.loaders.jsonp})
  */
 TimeMap.loaders.gss = function (options) {
     var loader = new TimeMap.loaders.jsonp(options),
@@ -152,3 +158,5 @@ TimeMap.loaders.gss.setParamField = function (param, fieldName) {
         this.setConfig(config, getField(data, fieldName));
     };
 };
+
+}());
