@@ -18,8 +18,9 @@
 
 (function () {
     "use strict";
+    // use strict causes "this" to not be defined
 
-    var window = this,
+    var //window = this,
         TimeMap = window.TimeMap,
         TimeMapDataset = window.TimeMapDataset,
         TimeMapItem = window.TimeMapItem,
