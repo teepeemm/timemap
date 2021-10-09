@@ -67,14 +67,26 @@ function setUp() {
     tm.showDatasets();
 }
 
-describe("missing element tests?", function() {
+describe("missing element tests", function() {
     beforeAll(setUp);
     it("has the right number of items", function() {
-        expect( tm.datasets.test.getItems().length )
+        const tmItems = tm.datasets.test.getItems();
+        expect( tmItems.length )
             .toBe( tmOptions.datasets[0].options.items.length );
+    });
+    it("has the right number of events", function() {
+        const tmItems = tm.datasets.test.getItems();
         expect( tm.datasets.test.eventSource.getCount() )
             .toBe( tmOptions.datasets[0].options.items
                     .filter( (item) => item.start ).length );
+        expect( tmItems.filter( (item) => !item.event ).length ).toBe(1);
+        expect( tmItems.findIndex( (item) => !item.event ) ).toBe(1);
+    });
+    it("has the right number of placemarks", function() {
+        const tmItems = tm.datasets.test.getItems();
+        expect( tmItems.filter( (item) => item.placemark ).length ).toBe(2);
+        expect( tmItems[0].placemark ).toBeDefined();
+        expect( tmItems[1].placemark ).toBeDefined();
     });
     afterAll( function() {
         tm.clear();
@@ -82,6 +94,6 @@ describe("missing element tests?", function() {
         $('.mapdiv').empty().removeAttr('style');
     });
 });
-// TODO lots more tests
+// how else should we check the missing data?
 
 }());

@@ -91,7 +91,7 @@ const values = [
             }
         ],
         "overlay" : {
-            "image" : "data/tile.png",
+            "image" : "../spec/data/tile.png",
             "north" : 38.285990,
             "south" : 29.231120,
             "east"  : 74.523837,
@@ -136,7 +136,7 @@ const values = [
                 ]
             },{
                 "overlay" : {
-                    "image" : "data/tile.png",
+                    "image" : "../spec/data/tile.png",
                     "north" : 38.285990,
                     "south" : 29.231120,
                     "east"  : 74.523837,
@@ -156,7 +156,7 @@ const values = [
         "start" : "1980-01-02",
         "end" : "1990-01-02",
         "overlay" : {
-            "image" : "data/tile.png",
+            "image" : "../spec/data/tile.png",
             "north" : 38.285990,
             "south" : 29.231120,
             "east"  : 74.523837,

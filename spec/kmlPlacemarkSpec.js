@@ -95,7 +95,7 @@ function dataloader(args) {
     <name>Test Overlay</name>
     <TimeStamp><when>1980-01-02</when></TimeStamp>
     <Icon>
-      <href>data/tile.png</href>
+      <href>../spec/data/tile.png</href>
     </Icon>
     <LatLonBox>
       <north>38.285990</north>
