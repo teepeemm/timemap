@@ -17,12 +17,12 @@
  *         <a href="https://github.com/nrabinowitz/mxn"> a customized version of Mapstraction 2.x<a>,
  *          a map provider of your choice, <a href="code.google.com/p/simile-widgets">SIMILE Timeline v1.2 - 2.3.1.</a>
  * </p>
- * <p><strong>Tested browsers:</strong> Firefox 3.x, Google Chrome, IE7, IE8</p>
+ * <p><strong>Tested browsers:</strong> Firefox 3.x, Google Chrome, <s>IE7, IE8</s></p>
  * <p><strong>Tested map providers:</strong>
- *          <a href="https://code.google.com/apis/maps/documentation/javascript/v2/reference.html">Google v2</a>,
+ *          <s><a href="https://code.google.com/apis/maps/documentation/javascript/v2/reference.html">Google v2</a>,</s>
  *          <a href="https://code.google.com/apis/maps/documentation/javascript/reference.html">Google v3</a>,
  *          <a href="https://openlayers.org">OpenLayers</a>,
- *          <a href="https://msdn.microsoft.com/en-us/library/bb429565.aspx">Bing Maps</a>
+ *          <s><a href="https://msdn.microsoft.com/en-us/library/bb429565.aspx">Bing Maps</a></s>
  * </p>
  * <ul>
  *     <li><a href="https://code.google.com/p/timemap/">Project Homepage</a></li>

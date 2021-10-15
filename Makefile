@@ -34,6 +34,7 @@ build-tests:
 timemap-full.pack.js: src/*.js src/ext/*.js src/loaders/*.js
 	uglifyjs src/timemap.js src/param.js src/state.js src/manipulation.js \
 		src/ext/*.js src/loaders/*.js \
+		--comments '/^!|@(?:license|preserve)/' \
 		-o timemap-full.pack.js
 
 timemap-pack.js: src/timemap.js

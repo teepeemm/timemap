@@ -3,13 +3,12 @@ const
     fs = require('fs'),
     path = require('path'),
     test_names = [
-        "basicLoad","gssLoad","jsonLoad","jsonpLoad","kmlLoad",
-        "basicPlacemark","kmlPlacemark",
+        // Load and Placemark define common functions for the rest of their line
+        "Load","basicLoad","gssLoad","jsonLoad","jsonpLoad","kmlLoad",
+        "Placemark","basicPlacemark","kmlPlacemark",
         "basicInfoWindow","customInfoWindow","multiInfoWindow",
-        "initOption","selection",
-        "geoRSS","kml","missingElement","deletion",
-        "visibility","timeParser","scrollTo",
-        "iteration","theme"
+        "deletion","geoRSS","initOption","iteration","kml","missingElement",
+        "scrollTo","selection","theme","timeParser","visibility"
     ],
     lib_dir = "../lib/",
     mxn_test_url_base_dev = lib_dir+"mxn/mxn.js",
@@ -21,17 +20,24 @@ const
         (arg) => arg.startsWith("GMAPS_API=")
     ).slice(10),
     map_test_url = {
-//        "google": "http://maps.google.com/maps?file=api&v=2&key="+google_api_key,
-//        G maps v2 doesn't seem to work anymore
-        "googlev3": "http://maps.google.com/maps/api/js?key="+google_api_key,
-        "openlayers": "http://openlayers.org/api/OpenLayers.js",
-//        "yahoo": "http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=MJmMF_XV34Fbt9iTJluolVk7T80lw8lD.lykqztF7S9F8szGFR01um.Rg5Svbsg.eMmZ",
-//        Yahoo discontinued this in 2015
+//        "cloudmade": "http://tile.cloudmade.com/wml/latest/web-maps-lite.js",
+//        CloudMade requires authentication
+//        "esri": "https://serverapi.arcgisonline.com/jsapi/arcgis/?v=3.2",
+//        "leaflet": "https://leaflet.cloudmade.com/dist/leaflet.js",
+//        "mapquest": "http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js?key=[your-api-key-here]"
+//        "openmq": "https://open.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js",
 //        "microsoft": "http://dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6"
+//        "microsoft7": "http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0",
 //        Microsoft is now up to version 8
-        // maybe add AWS?  but it's only free for 3 months
+//        "nokia": "http://api.maps.nokia.com/2.2.1/jsl.js",
+//        requires authentication
+        "openlayers": "https://openlayers.org/api/OpenLayers.js",
+//        "openspace": "http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=[your-api-key-here]",
+//        "ovi": "https://api.maps.ovi.com/jsl.js",
+//        "yandex": "http://api-maps.yandex.ru/1.1/index.xml?key=[your-api-key-here]"
+//        maybe add AWS?  but it's only free for 3 months
     },
-    dependencies = [ "Load", "Placemark" ],
+    // discontinued map providers: google(v2), yahoo
     built_dir = "specRunners/",
     files = fs.readdirSync(built_dir),
     test_page_preamble = `<!doctype html>
@@ -87,6 +93,11 @@ const
 </html>
 `;
 
+if ( google_api_key ) {
+    map_test_url.googlev3
+        = "https://maps.google.com/maps/api/js?key="+google_api_key;
+}
+
 for (const file of files) {
     if ( file.endsWith('.html') ) {
         fs.unlink(path.join(built_dir, file), err => {
@@ -97,11 +108,11 @@ for (const file of files) {
     }
 }
 
-Object.entries(map_test_url).map(createMapSuite).flat(Infinity);
+Object.entries(map_test_url).forEach(createMapSuite);
 build_master_html();
 
 function build_master_html() {
-    const filename = built_dir+"suite_master.html";
+    const filename = built_dir+"master_suite.html";
     let content = `<!doctype html>
 <html>
     <head>
@@ -158,19 +169,9 @@ function createMapSuite(map_api) {
 }
 
 function createSuite(map_api,timeline_api) {
-//    const test_pages = test_names.map(
-//        createPage.bind(undefined,map_api,timeline_api)
-//    );
     const suite_page = "suite_"+map_api[0]+"_"+timeline_api[0]+".html";
     build_suite_html(suite_page,map_api,timeline_api);
     return suite_page;
-//    return test_pages;
-}
-
-function createPage(map_api,timeline_api,test_name) {
-    const test_page = test_name+"_"+map_api[0]+"_"+timeline_api[0]+".html";
-    build_page_html(test_page,map_api,timeline_api,test_name);
-    return test_page;
 }
 
 function build_suite_html(suite_page,map_api,timeline_api) {
@@ -181,8 +182,7 @@ function build_suite_html(suite_page,map_api,timeline_api) {
             timeline_api[1],
             "../timemap-full.pack.js"
         ];
-    scripts.push(...[dependencies,test_names].flat(Infinity).map(
-        (script) => `../spec/${script}Spec.js` ) );
+    scripts.push(...test_names.map( (script) => `../spec/${script}Spec.js` ) );
     const content = test_page_preamble
         +scripts.map( (script) => `<script src="${script}"></script>` ).join('\n')
         +test_page_postamble;
@@ -192,26 +192,3 @@ function build_suite_html(suite_page,map_api,timeline_api) {
         console.error(err)
     }
 }
-
-function build_page_html(test_page,map_api,timeline_api,test_name) {
-    const filename = built_dir+test_page,
-        scripts = [
-            map_api[1],
-            mxn_test_url_base_dev+"?("+map_api[0]+")",
-            timeline_api[1],
-            "../timemap-full.pack.js"
-        ];
-    scripts.push(...(dependencies
-        .filter( (dep) => test_name.includes(dep) )
-        .map( (dep) => "../spec/"+dep+"Spec.js") ));
-    scripts.push("../spec/"+test_name+"Spec.js");
-    const content = test_page_preamble
-        + scripts.map( (script) => `<script src="${script}"></script>` ).join('\n')
-        + test_page_postamble;
-    try {
-        fs.writeFileSync(filename,content);
-    } catch (err) {
-        console.error(err)
-    }
-}
-// results are in the jsApiReporter object
